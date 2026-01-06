@@ -1,0 +1,52 @@
+# Odoo/Python
+*.pyc
+*.pyo
+__pycache__/
+*.swp
+*.swo
+*.egg-info/
+.eggs/
+
+# Odoo logs
+*.log
+
+# Odoo config
+*.conf
+
+# Database dumps
+*.sql
+*.sql.gz
+*.dump
+
+# IDEs
+.vscode/
+.idea/
+*.code-workspace
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Docker
+.env
+.env.*
+
+# Odoo filestore
+filestore/
+
+# Odoo addons auto-generated
+/static/
+
+# Backup
+backup*/
+
+# Node/npm
+node_modules/
+
+# Coverage
+htmlcov/
+.coverage
+
+# Misc
+*.bak
+*.tmp
