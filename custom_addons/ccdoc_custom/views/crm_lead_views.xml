@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_crm_lead_form_ccdoc" model="ir.ui.view">
+        <field name="name">crm.lead.form.ccdoc</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='extra']" position="after">
+                <page string="Informations CCDOC" name="ccdoc_info">
+                    <group>
+                        <group string="Références et Classification">
+                            <field name="x_ref_offre" required="1"/>
+                            <field name="x_bu"/>
+                        </group>
+                        <group string="Dates de Validation">
+                            <field name="x_date_depot"/>
+                            <field name="x_date_validation_dc"/>
+                            <field name="x_date_validation_dt"/>
+                            <field name="x_date_commande"/>
+                        </group>
+                    </group>
+                    <group string="Suivi">
+                        <field name="x_blocage" placeholder="Blocages rencontrés..."/>
+                        <field name="x_etape_suivante" placeholder="Prochaine action..."/>
+                    </group>
+                    <group string="Statut et Responsabilité">
+                        <field name="x_statut"/>
+                        <field name="x_responsable"/>
+                        <field name="x_priorite"/>
+                    </group>
+                    <group string="Planification">
+                        <field name="x_deadline"/>
+                        <field name="x_date_demande"/>
+                        <field name="x_avancement"/>
+                    </group>
+                    <group string="Prévisions">
+                        <field name="x_forecast"/>
+                    </group>
+                    <group string="Projet">
+                        <field name="project_id"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

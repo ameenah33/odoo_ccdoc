@@ -1,0 +1,45 @@
+<odoo>
+    <record id="view_project_form_ccdoc" model="ir.ui.view">
+        <field name="name">project.project.form.ccdoc</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="Informations CCDOC">
+                    <group>
+                        <group string="Références et Classification">
+                            <field name="x_ref_offre"/>
+                            <field name="x_bu"/>
+                        </group>
+                        <group string="Statut et Responsabilité">
+                            <field name="x_statut"/>
+                            <field name="x_responsable"/>
+                            <field name="x_priorite"/>
+                            <field name="x_equipe" widget="many2many_tags"/>
+                        </group>
+                        <group string="Dates et Planification initiale">
+                            <field name="x_date_demande"/>
+                            <field name="x_date_debut"/>
+                            <field name="x_date_fin"/>
+                            <field name="x_deadline"/>
+                            <field name="x_charge_prevue"/>
+                        </group>
+                        <group string="Suivi">
+                            <field name="x_avancement"/>
+                            <field name="x_forecast"/>
+                            <field name="x_blocage"/>
+                            <field name="x_etape_suivante"/>
+                        </group>
+                        <group string="Budget">
+                            <field name="x_budget_prevu"/>
+                            <field name="x_budget_realise"/>
+                        </group>
+                        <group string="Clôture / Perte">
+                            <field name="x_motif_perte"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

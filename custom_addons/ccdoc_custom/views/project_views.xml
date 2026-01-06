@@ -1,0 +1,34 @@
+<odoo>
+    <record id="view_project_form_ccdoc" model="ir.ui.view">
+        <field name="name">project.project.form.ccdoc</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="Informations CCDOC">
+                    <group>
+                        <group string="Références et Classification">
+                            <field name="x_ref_offre"/>
+                            <field name="x_bu"/>
+                        </group>
+                        <group string="Statut et Responsabilité">
+                            <field name="x_statut"/>
+                            <field name="x_responsable"/>
+                            <field name="x_priorite"/>
+                        </group>
+                        <group string="Dates">
+                            <field name="x_date_demande"/>
+                            <field name="x_deadline"/>
+                        </group>
+                        <group string="Suivi">
+                            <field name="x_avancement"/>
+                            <field name="x_forecast"/>
+                            <field name="x_blocage"/>
+                            <field name="x_etape_suivante"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
