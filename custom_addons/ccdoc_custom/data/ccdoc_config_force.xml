@@ -1,0 +1,9 @@
+<odoo>
+    <!-- Forcer la devise principale de la société sur Franc CFA -->
+    <record id="base.main_company" model="res.company">
+        <field name="currency_id" ref="currency_xof"/>
+    </record>
+
+ 
+
+</odoo>

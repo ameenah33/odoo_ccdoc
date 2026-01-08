@@ -5,11 +5,7 @@ class ProjectProject(models.Model):
     _inherit = 'project.project'
 
     x_ref_offre = fields.Char(string='REF Offre', size=50)
-    x_bu = fields.Selection([
-        ('physical', 'Physical'),
-        ('cyber', 'Cyber'),
-        ('audit', 'Audit')
-    ], string='BU')
+    x_bu_ids = fields.Many2many('ccdoc.bu', string='BU')
     x_statut = fields.Char(string='Statut')
     x_responsable = fields.Many2one('res.users', string='Responsable')
     x_deadline = fields.Date(string='Deadline')

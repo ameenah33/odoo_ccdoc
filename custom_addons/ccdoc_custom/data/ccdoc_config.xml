@@ -1,0 +1,21 @@
+<odoo>
+    <!-- Devise Franc CFA -->
+    <record id="currency_xof" model="res.currency">
+        <field name="name">Franc CFA</field>
+        <field name="symbol">CFA</field>
+        <field name="position">after</field>
+        <field name="active">True</field>
+        <field name="rounding">1.0</field>
+        <field name="decimal_places">0</field>
+    </record>
+
+    <!-- TVA 18% -->
+    <record id="tax_tva_18" model="account.tax">
+        <field name="name">TVA 18%</field>
+        <field name="amount">18.0</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="active">True</field>
+        <field name="company_id" eval="1"/>
+    </record>
+</odoo>

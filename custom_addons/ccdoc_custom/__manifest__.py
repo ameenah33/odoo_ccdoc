@@ -11,9 +11,13 @@
     'author': 'CCDOC',
     'depends': ['crm', 'project', 'sale'],
     'data': [
+        'security/ir.model.access.csv',
         'views/crm_lead_views.xml',
         'views/project_views.xml',
         'views/project_project_views.xml',
+        'views/ccdoc_bu_menu.xml',
+        'data/ccdoc_config.xml',
+        'data/ccdoc_config_force.xml',
     ],
     'installable': True,
     'application': False,

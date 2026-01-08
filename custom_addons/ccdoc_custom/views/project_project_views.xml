@@ -9,7 +9,7 @@
                     <group>
                         <group string="Références et Classification">
                             <field name="x_ref_offre"/>
-                            <field name="x_bu"/>
+                            <field name="x_bu_ids" widget="many2many_tags"/>
                         </group>
                         <group string="Statut et Responsabilité">
                             <field name="x_statut"/>

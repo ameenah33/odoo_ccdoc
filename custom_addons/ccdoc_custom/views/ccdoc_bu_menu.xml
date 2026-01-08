@@ -1,0 +1,10 @@
+<odoo>
+    <menuitem id="menu_ccdoc_root" name="CCDOC" sequence="10"/>
+    <record id="action_ccdoc_bu" model="ir.actions.act_window">
+        <field name="name">Business Units</field>
+        <field name="res_model">ccdoc.bu</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help">Gérez ici les Business Units disponibles pour la sélection dans les opportunités.</field>
+    </record>
+    <menuitem id="menu_ccdoc_bu" name="Business Units" parent="menu_ccdoc_root" action="action_ccdoc_bu" sequence="1"/>
+</odoo>

@@ -9,8 +9,9 @@
                 <page string="Informations CCDOC" name="ccdoc_info">
                     <group>
                         <group string="Références et Classification">
+                            <field name="x_bu_ids" widget="many2many_checkboxes"/>
                             <field name="x_ref_offre" required="1"/>
-                            <field name="x_bu"/>
+                            
                         </group>
                         <group string="Dates de Validation">
                             <field name="x_date_depot"/>
