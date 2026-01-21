@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Ajouter le bouton d'import sur le formulaire de devis -->
+    <record id="view_sale_order_form_import_button" model="ir.ui.view">
+        <field name="name">sale.order.form.import.button</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='order_lines']//field[@name='order_line']" position="before">
+                <div class="mb-2">
+                    <button name="action_open_import_wizard" type="object" 
+                            string="📁 Importer depuis Excel/CSV" 
+                            class="btn-secondary"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

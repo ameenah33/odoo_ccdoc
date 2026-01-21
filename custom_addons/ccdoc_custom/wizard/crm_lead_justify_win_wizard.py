@@ -32,7 +32,7 @@ class CrmLeadJustifyWinWizard(models.TransientModel):
             lead.x_signed_po_attachment_id = attachment.id
             # Poster un message dans le chatter pour la traçabilité avec la pièce jointe
             body = Markup('''
-            <div style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); padding: 15px; border-radius: 10px; color: white; margin-bottom: 15px;">
+            <div style="background: linear-gradient(135deg, #11998e 0%%, #38ef7d 100%%); padding: 15px; border-radius: 10px; color: white; margin-bottom: 15px;">
                 <h3 style="margin: 0; color: white;">🏆 Opportunité validée pour passage en Gagné</h3>
             </div>
             <div style="background-color: #f0fff4; padding: 15px; border-radius: 8px; border-left: 4px solid #38ef7d;">
@@ -51,7 +51,7 @@ class CrmLeadJustifyWinWizard(models.TransientModel):
         else:
             # Poster un message même sans pièce jointe
             body = Markup('''
-            <div style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); padding: 15px; border-radius: 10px; color: white; margin-bottom: 15px;">
+            <div style="background: linear-gradient(135deg, #11998e 0%%, #38ef7d 100%%); padding: 15px; border-radius: 10px; color: white; margin-bottom: 15px;">
                 <h3 style="margin: 0; color: white;">🏆 Opportunité validée pour passage en Gagné</h3>
             </div>
             <div style="background-color: #f0fff4; padding: 15px; border-radius: 8px; border-left: 4px solid #38ef7d;">
