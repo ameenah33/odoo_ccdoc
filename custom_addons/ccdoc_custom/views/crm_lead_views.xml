@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Les xpaths doivent être dans le champ arch du record, pas directement sous <odoo> -->
     <record id="view_crm_lead_form_ccdoc" model="ir.ui.view">
         <field name="name">crm.lead.form.ccdoc</field>
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_lead_view_form"/>
         <field name="arch" type="xml">
+            <!-- Les boutons Gagné/Perdu seront masqués via CSS dans les assets -->
+            <xpath expr="//div[contains(@class, 'oe_button_box')]" position="inside">
+                <button name="action_open_purchase" type="object" string="Achats" class="btn-secondary"/>
+                <button name="action_open_sale" type="object" string="Ventes" class="btn-secondary"/>
+                <button name="action_justify_win" type="object" string="Justificatif de gain" class="oe_highlight"/>
+            </xpath>
             <xpath expr="//page[@name='extra']" position="after">
                 <page string="Informations CCDOC" name="ccdoc_info">
                     <group>
@@ -39,6 +46,10 @@
                     </group>
                     <group string="Projet">
                         <field name="project_id"/>
+                    </group>
+                    <group string="Notification d'envoi au client">
+                        <field name="x_contacts_a_notifier" widget="many2many_tags"/>
+                        <field name="x_envoi_notifie"/>
                     </group>
                 </page>
             </xpath>

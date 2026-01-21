@@ -1,0 +1,18 @@
+/* Masquer les boutons rapides Gagné/Perdu dans le header du formulaire CRM */
+/* Ces boutons sont dans le header, après "Nouveau devis" */
+.o_form_view .o_form_statusbar button[name="action_set_won_rainbowman"],
+.o_form_view .o_form_statusbar button[name="action_set_lost"],
+.o_form_view .o_form_statusbar button[name="action_set_won"],
+.o_form_view .o_statusbar_buttons button[name="action_set_won_rainbowman"],
+.o_form_view .o_statusbar_buttons button[name="action_set_lost"],
+.o_form_view .o_statusbar_buttons button[name="action_set_won"],
+/* Variantes supplémentaires pour couvrir tous les cas */
+button[name="action_set_lost"],
+button[name="action_set_won_rainbowman"] {
+    display: none !important;
+}
+
+/* Masquer le ruban GAGNÉ par défaut - il sera affiché via une classe spécifique ajoutée par le serveur */
+.o_form_view .o_ribbon {
+    display: none !important;
+}

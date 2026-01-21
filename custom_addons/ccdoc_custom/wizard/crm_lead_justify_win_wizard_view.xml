@@ -1,0 +1,19 @@
+<odoo>
+    <record id="crm_lead_justify_win_wizard_form" model="ir.ui.view">
+        <field name="name">crm.lead.justify.win.wizard.form</field>
+        <field name="model">crm.lead.justify.win.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Justification de gain de l'opportunité">
+                <group>
+                    <field name="justification"/>
+                    <field name="signed_po_filename" invisible="1"/>
+                    <field name="signed_po_file" filename="signed_po_filename" widget="binary"/>
+                </group>
+                <footer>
+                    <button string="Valider" type="object" name="action_confirm" class="btn-primary"/>
+                    <button string="Annuler" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

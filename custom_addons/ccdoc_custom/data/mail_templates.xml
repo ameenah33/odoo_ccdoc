@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    
+    <!-- Template email pour notification d'envoi de dossier -->
+    <record id="mail_template_dossier_envoye" model="mail.template">
+        <field name="name">CCDOC - Dossier envoyé au client</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="subject">📤 Dossier envoyé : {{ object.x_ref_offre or object.name }}</field>
+        <field name="email_from">{{ (user.email_formatted) }}</field>
+        <field name="body_html"><![CDATA[
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <div style="background: #667eea; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
+        <h1 style="color: white; margin: 0;">📤 Dossier Envoyé</h1>
+    </div>
+    <div style="background-color: #ffffff; padding: 20px; border: 1px solid #e0e0e0;">
+        <p>Bonjour,</p>
+        <p>Le dossier suivant a été <strong>envoyé au client</strong> :</p>
+        <div style="background-color: #f8f9fa; border-left: 4px solid #667eea; padding: 15px; margin: 15px 0;">
+            <p><strong>📋 Référence :</strong> {{ object.x_ref_offre or 'N/A' }}</p>
+            <p><strong>🏢 Client :</strong> {{ object.partner_id.name or 'Non défini' }}</p>
+            <p><strong>💰 Montant :</strong> {{ "%.2f"|format(object.expected_revenue) }} €</p>
+            <p><strong>📅 Date :</strong> {{ context_today().strftime('%d/%m/%Y') }}</p>
+        </div>
+        <div style="text-align: center; margin: 20px 0;">
+            <a href="{{ object.get_base_url() }}/web#id={{ object.id }}&amp;model=crm.lead&amp;view_type=form" 
+               style="background: #667eea; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px;">
+                Voir l'opportunité
+            </a>
+        </div>
+    </div>
+    <div style="background-color: #f8f9fa; padding: 15px; text-align: center; border-radius: 0 0 10px 10px;">
+        <p style="color: #888; font-size: 12px; margin: 0;">Système CCDOC</p>
+    </div>
+</div>
+]]></field>
+        <field name="auto_delete" eval="False"/>
+    </record>
+
+    <!-- Template email pour justificatif de gain -->
+    <record id="mail_template_justificatif_gain" model="mail.template">
+        <field name="name">CCDOC - Opportunité gagnée</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="subject">🏆 Opportunité gagnée : {{ object.x_ref_offre or object.name }}</field>
+        <field name="email_from">{{ (user.email_formatted) }}</field>
+        <field name="body_html"><![CDATA[
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <div style="background: #11998e; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
+        <h1 style="color: white; margin: 0;">🏆 Opportunité Gagnée !</h1>
+    </div>
+    <div style="background-color: #ffffff; padding: 20px; border: 1px solid #e0e0e0;">
+        <p>Félicitations ! 🎉</p>
+        <p>L'opportunité suivante a été marquée comme <strong style="color: #11998e;">gagnée</strong> :</p>
+        <div style="background-color: #f0fff4; border-left: 4px solid #38ef7d; padding: 15px; margin: 15px 0;">
+            <p><strong>📋 Référence :</strong> {{ object.x_ref_offre or 'N/A' }}</p>
+            <p><strong>🏢 Client :</strong> {{ object.partner_id.name or 'Non défini' }}</p>
+            <p><strong>💰 Montant :</strong> {{ "%.2f"|format(object.expected_revenue) }} €</p>
+            <p><strong>👤 Responsable :</strong> {{ object.user_id.name or 'Non assigné' }}</p>
+        </div>
+        <div style="background-color: #fff8e1; padding: 15px; border-radius: 8px; margin: 15px 0;">
+            <p style="margin: 0;"><strong>📝 Justification :</strong></p>
+            <p>{{ object.x_justification_win or 'Aucune justification' }}</p>
+        </div>
+        <div style="text-align: center; margin: 20px 0;">
+            <a href="{{ object.get_base_url() }}/web#id={{ object.id }}&amp;model=crm.lead&amp;view_type=form" 
+               style="background: #11998e; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px;">
+                Voir l'opportunité
+            </a>
+        </div>
+    </div>
+    <div style="background-color: #f8f9fa; padding: 15px; text-align: center; border-radius: 0 0 10px 10px;">
+        <p style="color: #888; font-size: 12px; margin: 0;">Système CCDOC</p>
+    </div>
+</div>
+]]></field>
+        <field name="auto_delete" eval="False"/>
+    </record>
+
+    <!-- Template email pour changement d'étape -->
+    <record id="mail_template_changement_etape" model="mail.template">
+        <field name="name">CCDOC - Changement d'étape</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="subject">🔄 {{ object.x_ref_offre or object.name }} - Étape : {{ object.stage_id.name }}</field>
+        <field name="email_from">{{ (user.email_formatted) }}</field>
+        <field name="body_html"><![CDATA[
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <div style="background: #4facfe; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
+        <h1 style="color: white; margin: 0;">🔄 Progression du dossier</h1>
+    </div>
+    <div style="background-color: #ffffff; padding: 20px; border: 1px solid #e0e0e0;">
+        <p>Le dossier <strong>{{ object.x_ref_offre or object.name }}</strong> a progressé :</p>
+        <div style="text-align: center; margin: 20px 0;">
+            <span style="background: #4facfe; color: white; padding: 10px 20px; border-radius: 20px; font-weight: bold;">
+                {{ object.stage_id.name }}
+            </span>
+        </div>
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+            <p><strong>🏢 Client :</strong> {{ object.partner_id.name or 'Non défini' }}</p>
+            <p><strong>💰 Montant :</strong> {{ "%.2f"|format(object.expected_revenue) }} €</p>
+            <p><strong>📊 Probabilité :</strong> {{ object.probability }}%</p>
+        </div>
+        <div style="text-align: center; margin: 20px 0;">
+            <a href="{{ object.get_base_url() }}/web#id={{ object.id }}&amp;model=crm.lead&amp;view_type=form" 
+               style="background: #4facfe; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px;">
+                Voir le dossier
+            </a>
+        </div>
+    </div>
+    <div style="background-color: #f8f9fa; padding: 15px; text-align: center; border-radius: 0 0 10px 10px;">
+        <p style="color: #888; font-size: 12px; margin: 0;">Système CCDOC</p>
+    </div>
+</div>
+]]></field>
+        <field name="auto_delete" eval="False"/>
+    </record>
+
+</odoo>

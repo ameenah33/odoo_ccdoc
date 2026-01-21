@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_ccdoc_bu_user,access_ccdoc_bu_user,model_ccdoc_bu,base.group_user,1,0,0,0
 access_ccdoc_bu_manager,access_ccdoc_bu_manager,model_ccdoc_bu,base.group_system,1,1,1,1
+
+access_crm_lead_justify_win_wizard_user,crm.lead.justify.win.wizard,model_crm_lead_justify_win_wizard,base.group_user,1,1,1,1
