@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vue Kanban des tickets -->
+    <record id="view_ccdoc_ticket_kanban" model="ir.ui.view">
+        <field name="name">ccdoc.ticket.kanban</field>
+        <field name="model">ccdoc.ticket</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage_id" class="o_kanban_small_column o_ccdoc_ticket_kanban">
+                <field name="stage_id"/>
+                <field name="color"/>
+                <field name="priority"/>
+                <field name="user_id"/>
+                <field name="partner_id"/>
+                <field name="category_id"/>
+                <field name="sla_status"/>
+                <field name="kanban_state"/>
+                <field name="is_closed"/>
+                <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger", "normal": "muted"}'/>
+                <templates>
+                    <t t-name="kanban-menu">
+                        <a role="menuitem" type="edit" class="dropdown-item">Modifier</a>
+                        <a role="menuitem" type="delete" class="dropdown-item">Supprimer</a>
+                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                    </t>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click #{record.is_closed.raw_value ? 'opacity-75' : ''}"
+                             t-att-style="'border-left: 4px solid ' + (record.priority.raw_value == '3' ? '#dc3545' : record.priority.raw_value == '2' ? '#fd7e14' : record.priority.raw_value == '1' ? '#ffc107' : '#28a745')">
+                            <div class="oe_kanban_content">
+                                <!-- En-tête avec référence et SLA -->
+                                <div class="o_kanban_record_top mb-2">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                    </div>
+                                    <div>
+                                        <span t-if="record.sla_status.raw_value == 'overdue'" 
+                                              class="badge text-bg-danger" title="SLA dépassé">
+                                            <i class="fa fa-clock-o"/> SLA
+                                        </span>
+                                        <span t-elif="record.sla_status.raw_value == 'at_risk'" 
+                                              class="badge text-bg-warning" title="SLA à risque">
+                                            <i class="fa fa-clock-o"/> SLA
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Sujet -->
+                                <div class="o_kanban_record_body">
+                                    <div class="mb-2">
+                                        <field name="subject"/>
+                                    </div>
+                                    
+                                    <!-- Catégorie et priorité -->
+                                    <div class="mb-2">
+                                        <span t-if="record.category_id.value" class="badge text-bg-info me-1">
+                                            <field name="category_id"/>
+                                        </span>
+                                        <span class="badge" t-att-class="
+                                            record.priority.raw_value == '3' ? 'text-bg-danger' :
+                                            record.priority.raw_value == '2' ? 'text-bg-warning' :
+                                            record.priority.raw_value == '1' ? 'text-bg-secondary' : 'text-bg-success'">
+                                            <field name="priority"/>
+                                        </span>
+                                    </div>
+                                    
+                                    <!-- Client -->
+                                    <div t-if="record.partner_id.value" class="text-muted small">
+                                        <i class="fa fa-building me-1"/><field name="partner_id"/>
+                                    </div>
+                                </div>
+                                
+                                <!-- Pied avec assigné -->
+                                <div class="o_kanban_record_bottom mt-2">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="activity_ids" widget="kanban_activity"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="user_id" widget="many2one_avatar_user"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Vue liste des tickets -->
+    <record id="view_ccdoc_ticket_tree" model="ir.ui.view">
+        <field name="name">ccdoc.ticket.tree</field>
+        <field name="model">ccdoc.ticket</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" decoration-bf="1"/>
+                <field name="subject"/>
+                <field name="partner_id"/>
+                <field name="category_id"/>
+                <field name="priority" widget="priority"/>
+                <field name="stage_id" widget="badge" 
+                       decoration-success="is_closed == True"
+                       decoration-info="is_closed == False"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="sla_status" widget="badge"
+                       decoration-success="sla_status == 'on_track'"
+                       decoration-warning="sla_status == 'at_risk'"
+                       decoration-danger="sla_status == 'overdue'"/>
+                <field name="create_date"/>
+                <field name="date_deadline"/>
+                <field name="is_closed" column_invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire des tickets -->
+    <record id="view_ccdoc_ticket_form" model="ir.ui.view">
+        <field name="name">ccdoc.ticket.form</field>
+        <field name="model">ccdoc.ticket</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_assign_to_me" type="object" string="M'assigner" 
+                            class="btn-secondary" invisible="user_id == uid"/>
+                    <button name="action_close" type="object" string="Fermer" 
+                            class="btn-primary" invisible="is_closed == True"/>
+                    <button name="action_reopen" type="object" string="Réouvrir" 
+                            class="btn-secondary" invisible="is_closed == False"/>
+                    <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <!-- Bandeau SLA -->
+                    <div class="alert alert-danger" role="alert" invisible="sla_status != 'overdue'">
+                        <i class="fa fa-exclamation-triangle"/> <strong>SLA dépassé !</strong> Ce ticket a dépassé son délai de traitement.
+                    </div>
+                    <div class="alert alert-warning" role="alert" invisible="sla_status != 'at_risk'">
+                        <i class="fa fa-clock-o"/> <strong>Attention !</strong> Ce ticket approche de sa deadline SLA.
+                    </div>
+                    
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                        <label for="subject"/>
+                        <h2>
+                            <field name="subject" placeholder="Sujet du ticket"/>
+                        </h2>
+                    </div>
+                    
+                    <group>
+                        <group string="Informations">
+                            <field name="partner_id"/>
+                            <field name="project_id"/>
+                            <field name="category_id"/>
+                            <field name="origin"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        </group>
+                        <group string="Assignation">
+                            <field name="user_id"/>
+                            <field name="team_user_ids" widget="many2many_tags"/>
+                            <field name="priority" widget="priority"/>
+                            <field name="kanban_state" widget="state_selection"/>
+                        </group>
+                        <group string="Dates">
+                            <field name="create_date"/>
+                            <field name="date_deadline"/>
+                            <field name="date_assigned"/>
+                            <field name="date_closed" invisible="is_closed == False"/>
+                        </group>
+                        <group string="SLA">
+                            <field name="sla_hours"/>
+                            <field name="sla_deadline"/>
+                            <field name="sla_status" widget="badge"
+                                   decoration-success="sla_status == 'on_track'"
+                                   decoration-warning="sla_status == 'at_risk'"
+                                   decoration-danger="sla_status == 'overdue'"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="Décrivez le problème en détail..."/>
+                        </page>
+                        <page string="Résolution" name="resolution" invisible="is_closed == False">
+                            <field name="resolution" placeholder="Décrivez la solution apportée..."/>
+                        </page>
+                    </notebook>
+                    
+                    <field name="is_closed" invisible="1"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue recherche -->
+    <record id="view_ccdoc_ticket_search" model="ir.ui.view">
+        <field name="name">ccdoc.ticket.search</field>
+        <field name="model">ccdoc.ticket</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="subject"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <field name="category_id"/>
+                <filter string="Mes tickets" name="my_tickets" domain="[('user_id', '=', uid)]"/>
+                <filter string="Non assignés" name="unassigned" domain="[('user_id', '=', False)]"/>
+                <separator/>
+                <filter string="Ouverts" name="open" domain="[('is_closed', '=', False)]"/>
+                <filter string="Fermés" name="closed" domain="[('is_closed', '=', True)]"/>
+                <separator/>
+                <filter string="SLA dépassé" name="sla_overdue" domain="[('sla_status', '=', 'overdue')]"/>
+                <filter string="SLA à risque" name="sla_at_risk" domain="[('sla_status', '=', 'at_risk')]"/>
+                <separator/>
+                <filter string="Urgents" name="urgent" domain="[('priority', '=', '3')]"/>
+                <filter string="Haute priorité" name="high_priority" domain="[('priority', '=', '2')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Étape" name="group_stage" context="{'group_by': 'stage_id'}"/>
+                    <filter string="Assigné à" name="group_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="Catégorie" name="group_category" context="{'group_by': 'category_id'}"/>
+                    <filter string="Client" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Priorité" name="group_priority" context="{'group_by': 'priority'}"/>
+                    <filter string="Date de création" name="group_create" context="{'group_by': 'create_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action principale -->
+    <record id="action_ccdoc_ticket" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">ccdoc.ticket</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'search_default_open': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créez votre premier ticket !
+            </p>
+            <p>
+                Les tickets permettent de suivre les demandes de support et les incidents.
+            </p>
+        </field>
+    </record>
+
+    <!-- Action Mes tickets -->
+    <record id="action_ccdoc_ticket_my" model="ir.actions.act_window">
+        <field name="name">Mes Tickets</field>
+        <field name="res_model">ccdoc.ticket</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'search_default_my_tickets': 1, 'search_default_open': 1}</field>
+    </record>
+
+</odoo>

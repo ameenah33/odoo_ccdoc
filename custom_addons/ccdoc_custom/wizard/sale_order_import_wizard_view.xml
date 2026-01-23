@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Wizard d'import de lignes de devis -->
+  
     <record id="view_sale_order_import_wizard_form" model="ir.ui.view">
         <field name="name">sale.order.import.wizard.form</field>
         <field name="model">sale.order.import.wizard</field>
@@ -83,8 +83,7 @@
             </form>
         </field>
     </record>
-
-    <!-- Action pour ouvrir le wizard -->
+    
     <record id="action_sale_order_import_wizard" model="ir.actions.act_window">
         <field name="name">Importer des lignes</field>
         <field name="res_model">sale.order.import.wizard</field>

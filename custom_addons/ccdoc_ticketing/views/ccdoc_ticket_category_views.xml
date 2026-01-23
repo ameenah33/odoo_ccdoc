@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vue liste des catégories -->
+    <record id="view_ccdoc_ticket_category_tree" model="ir.ui.view">
+        <field name="name">ccdoc.ticket.category.tree</field>
+        <field name="model">ccdoc.ticket.category</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="default_sla_hours"/>
+                <field name="default_user_id"/>
+                <field name="ticket_count"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire des catégories -->
+    <record id="view_ccdoc_ticket_category_form" model="ir.ui.view">
+        <field name="name">ccdoc.ticket.category.form</field>
+        <field name="model">ccdoc.ticket.category</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="sequence"/>
+                            <field name="color" widget="color_picker"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="default_user_id"/>
+                            <field name="default_sla_hours"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue liste des étapes -->
+    <record id="view_ccdoc_ticket_stage_tree" model="ir.ui.view">
+        <field name="name">ccdoc.ticket.stage.tree</field>
+        <field name="model">ccdoc.ticket.stage</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="is_default"/>
+                <field name="is_closed"/>
+                <field name="fold"/>
+                <field name="ticket_count"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire des étapes -->
+    <record id="view_ccdoc_ticket_stage_form" model="ir.ui.view">
+        <field name="name">ccdoc.ticket.stage.form</field>
+        <field name="model">ccdoc.ticket.stage</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="sequence"/>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                        <group>
+                            <field name="is_default"/>
+                            <field name="is_closed"/>
+                            <field name="fold"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                        <field name="mail_template_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue liste des tags -->
+    <record id="view_ccdoc_ticket_tag_tree" model="ir.ui.view">
+        <field name="name">ccdoc.ticket.tag.tree</field>
+        <field name="model">ccdoc.ticket.tag</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_ccdoc_ticket_category" model="ir.actions.act_window">
+        <field name="name">Catégories</field>
+        <field name="res_model">ccdoc.ticket.category</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_ccdoc_ticket_stage" model="ir.actions.act_window">
+        <field name="name">Étapes</field>
+        <field name="res_model">ccdoc.ticket.stage</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_ccdoc_ticket_tag" model="ir.actions.act_window">
+        <field name="name">Tags</field>
+        <field name="res_model">ccdoc.ticket.tag</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+</odoo>

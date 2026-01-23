@@ -17,4 +17,16 @@
         </field>
     </record>
 
+    <!-- Masquer le bouton Envoyer par e-mail -->
+    <record id="view_sale_order_form_hide_send_email" model="ir.ui.view">
+        <field name="name">sale.order.form.hide.send.email</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_quotation_send']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>

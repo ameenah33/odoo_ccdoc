@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Groupe d'utilisateurs Ticketing -->
+        <record id="group_ccdoc_ticketing_user" model="res.groups">
+            <field name="name">Utilisateur Ticketing</field>
+            <field name="category_id" ref="base.module_category_services"/>
+        </record>
+        
+        <record id="group_ccdoc_ticketing_manager" model="res.groups">
+            <field name="name">Manager Ticketing</field>
+            <field name="category_id" ref="base.module_category_services"/>
+            <field name="implied_ids" eval="[(4, ref('group_ccdoc_ticketing_user'))]"/>
+        </record>
+        
+        <!-- Règle: Les utilisateurs voient leurs propres tickets et ceux non assignés -->
+        <record id="rule_ccdoc_ticket_user" model="ir.rule">
+            <field name="name">Tickets: Utilisateur voit ses tickets</field>
+            <field name="model_id" ref="model_ccdoc_ticket"/>
+            <field name="domain_force">[
+                '|',
+                ('user_id', '=', user.id),
+                ('user_id', '=', False)
+            ]</field>
+            <field name="groups" eval="[(4, ref('group_ccdoc_ticketing_user'))]"/>
+        </record>
+        
+        <!-- Règle: Les managers voient tous les tickets -->
+        <record id="rule_ccdoc_ticket_manager" model="ir.rule">
+            <field name="name">Tickets: Manager voit tout</field>
+            <field name="model_id" ref="model_ccdoc_ticket"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_ccdoc_ticketing_manager'))]"/>
+        </record>
+    </data>
+</odoo>

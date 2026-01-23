@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Menu principal Ticketing -->
+    <menuitem id="menu_ccdoc_ticketing_root"
+              name="Ticketing"
+              web_icon="ccdoc_ticketing,static/description/icon.png"
+              sequence="25"/>
+
+    <!-- Sous-menus -->
+    <menuitem id="menu_ccdoc_ticketing_tickets"
+              name="Tickets"
+              parent="menu_ccdoc_ticketing_root"
+              sequence="10"/>
+
+    <menuitem id="menu_ccdoc_ticket_all"
+              name="Tous les tickets"
+              parent="menu_ccdoc_ticketing_tickets"
+              action="action_ccdoc_ticket"
+              sequence="10"/>
+
+    <menuitem id="menu_ccdoc_ticket_my"
+              name="Mes tickets"
+              parent="menu_ccdoc_ticketing_tickets"
+              action="action_ccdoc_ticket_my"
+              sequence="20"/>
+
+    <!-- Configuration -->
+    <menuitem id="menu_ccdoc_ticketing_config"
+              name="Configuration"
+              parent="menu_ccdoc_ticketing_root"
+              sequence="100"
+              groups="group_ccdoc_ticketing_manager"/>
+
+    <menuitem id="menu_ccdoc_ticket_stage"
+              name="Étapes"
+              parent="menu_ccdoc_ticketing_config"
+              action="action_ccdoc_ticket_stage"
+              sequence="10"/>
+
+    <menuitem id="menu_ccdoc_ticket_category"
+              name="Catégories"
+              parent="menu_ccdoc_ticketing_config"
+              action="action_ccdoc_ticket_category"
+              sequence="20"/>
+
+    <menuitem id="menu_ccdoc_ticket_tag"
+              name="Tags"
+              parent="menu_ccdoc_ticketing_config"
+              action="action_ccdoc_ticket_tag"
+              sequence="30"/>
+
+</odoo>

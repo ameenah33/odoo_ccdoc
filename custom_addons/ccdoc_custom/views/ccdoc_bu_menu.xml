@@ -1,5 +1,10 @@
 <odoo>
-    <menuitem id="menu_ccdoc_root" name="CCDOC" sequence="10"/>
+    <!-- Menu principal CCDOC comme application -->
+    <menuitem id="menu_ccdoc_root" 
+              name="CCDOC" 
+              web_icon="ccdoc_custom,static/description/icon.png"
+              sequence="10"/>
+    
     <record id="action_ccdoc_bu" model="ir.actions.act_window">
         <field name="name">Business Units</field>
         <field name="res_model">ccdoc.bu</field>

@@ -16,3 +16,80 @@ button[name="action_set_won_rainbowman"] {
 .o_form_view .o_ribbon {
     display: none !important;
 }
+
+/* ========================================= */
+/* Styles Kanban - Colonnes avec séparateurs */
+/* ========================================= */
+
+/* Séparateurs verticaux entre les colonnes Kanban */
+.o_kanban_group {
+    border-right: 2px solid #dee2e6 !important;
+    margin-right: 0 !important;
+}
+
+/* Supprimer le séparateur de la dernière colonne */
+.o_kanban_group:last-child {
+    border-right: none !important;
+}
+
+/* Améliorer l'apparence des en-têtes de colonnes */
+.o_kanban_header {
+    background-color: #f8f9fa !important;
+    border-bottom: 2px solid #dee2e6 !important;
+    padding: 12px 8px !important;
+    font-weight: 600 !important;
+}
+
+/* Ajouter un effet de survol sur les colonnes */
+.o_kanban_group:hover {
+    background-color: #fafbfc !important;
+}
+
+/* Style des cartes Kanban dans les projets */
+.o_kanban_record {
+    border-left: 4px solid #667eea !important;
+    margin-bottom: 8px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+    transition: box-shadow 0.2s ease !important;
+}
+
+.o_kanban_record:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15) !important;
+}
+
+/* Couleurs de bordure selon l'état (pour les projets) */
+.o_kanban_group[data-value="attente_validation"] .o_kanban_record {
+    border-left-color: #ffc107 !important;
+}
+
+.o_kanban_group[data-value="attente_paiement"] .o_kanban_record {
+    border-left-color: #fd7e14 !important;
+}
+
+.o_kanban_group[data-value="en_cours"] .o_kanban_record {
+    border-left-color: #28a745 !important;
+}
+
+.o_kanban_group[data-value="bloque"] .o_kanban_record {
+    border-left-color: #dc3545 !important;
+}
+
+.o_kanban_group[data-value="en_recette"] .o_kanban_record {
+    border-left-color: #17a2b8 !important;
+}
+
+.o_kanban_group[data-value="en_production"] .o_kanban_record {
+    border-left-color: #6f42c1 !important;
+}
+
+.o_kanban_group[data-value="termine"] .o_kanban_record {
+    border-left-color: #20c997 !important;
+}
+
+/* ========================================= */
+/* Masquer le bouton Envoyer par e-mail sur les devis/commandes */
+/* ========================================= */
+.o_form_view button[name="action_quotation_send"] {
+    display: none !important;
+}
+

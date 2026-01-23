@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Étapes par défaut -->
+        <record id="stage_new" model="ccdoc.ticket.stage">
+            <field name="name">Nouveau</field>
+            <field name="sequence">10</field>
+            <field name="is_default">True</field>
+            <field name="color">1</field>
+        </record>
+        
+        <record id="stage_in_progress" model="ccdoc.ticket.stage">
+            <field name="name">En cours</field>
+            <field name="sequence">20</field>
+            <field name="color">4</field>
+        </record>
+        
+        <record id="stage_waiting" model="ccdoc.ticket.stage">
+            <field name="name">En attente client</field>
+            <field name="sequence">30</field>
+            <field name="color">3</field>
+        </record>
+        
+        <record id="stage_resolved" model="ccdoc.ticket.stage">
+            <field name="name">Résolu</field>
+            <field name="sequence">40</field>
+            <field name="color">10</field>
+        </record>
+        
+        <record id="stage_closed" model="ccdoc.ticket.stage">
+            <field name="name">Fermé</field>
+            <field name="sequence">50</field>
+            <field name="is_closed">True</field>
+            <field name="fold">True</field>
+            <field name="color">7</field>
+        </record>
+        
+        <!-- Catégories par défaut -->
+        <record id="category_support" model="ccdoc.ticket.category">
+            <field name="name">Support technique</field>
+            <field name="sequence">10</field>
+            <field name="default_sla_hours">24</field>
+            <field name="color">1</field>
+        </record>
+        
+        <record id="category_bug" model="ccdoc.ticket.category">
+            <field name="name">Bug / Incident</field>
+            <field name="sequence">20</field>
+            <field name="default_sla_hours">8</field>
+            <field name="color">9</field>
+        </record>
+        
+        <record id="category_feature" model="ccdoc.ticket.category">
+            <field name="name">Demande d'évolution</field>
+            <field name="sequence">30</field>
+            <field name="default_sla_hours">72</field>
+            <field name="color">4</field>
+        </record>
+        
+        <record id="category_question" model="ccdoc.ticket.category">
+            <field name="name">Question / Information</field>
+            <field name="sequence">40</field>
+            <field name="default_sla_hours">48</field>
+            <field name="color">5</field>
+        </record>
+    </data>
+</odoo>

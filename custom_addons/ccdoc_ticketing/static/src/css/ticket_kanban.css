@@ -1,0 +1,98 @@
+/* ========================================= */
+/* Styles Kanban pour les tickets CCDOC     */
+/* ========================================= */
+
+/* Style général du Kanban tickets */
+.o_ccdoc_ticket_kanban .o_kanban_group {
+    border-right: 2px solid #dee2e6 !important;
+    background-color: #f8f9fa;
+}
+
+.o_ccdoc_ticket_kanban .o_kanban_group:last-child {
+    border-right: none !important;
+}
+
+/* En-têtes de colonnes */
+.o_ccdoc_ticket_kanban .o_kanban_header {
+    background-color: #fff !important;
+    border-bottom: 2px solid #dee2e6 !important;
+    padding: 12px 8px !important;
+    font-weight: 600 !important;
+}
+
+/* Cartes de tickets */
+.o_ccdoc_ticket_kanban .o_kanban_record {
+    margin-bottom: 8px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12) !important;
+    transition: all 0.2s ease !important;
+    border-radius: 4px !important;
+}
+
+.o_ccdoc_ticket_kanban .o_kanban_record:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    transform: translateY(-2px);
+}
+
+/* Indicateurs de priorité */
+.o_ccdoc_ticket_kanban .badge {
+    font-size: 0.75rem;
+}
+
+/* SLA dépassé - effet clignotant */
+@keyframes sla-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.o_ccdoc_ticket_kanban .badge.text-bg-danger {
+    animation: sla-pulse 1.5s infinite;
+}
+
+/* Tickets fermés - grisés */
+.o_ccdoc_ticket_kanban .opacity-75 {
+    opacity: 0.6 !important;
+}
+
+/* Couleurs par étape */
+.o_ccdoc_ticket_kanban .o_kanban_group[data-value="Nouveau"] .o_kanban_header {
+    border-left: 4px solid #17a2b8 !important;
+}
+
+.o_ccdoc_ticket_kanban .o_kanban_group[data-value="En cours"] .o_kanban_header {
+    border-left: 4px solid #007bff !important;
+}
+
+.o_ccdoc_ticket_kanban .o_kanban_group[data-value="En attente client"] .o_kanban_header {
+    border-left: 4px solid #ffc107 !important;
+}
+
+.o_ccdoc_ticket_kanban .o_kanban_group[data-value="Résolu"] .o_kanban_header {
+    border-left: 4px solid #28a745 !important;
+}
+
+.o_ccdoc_ticket_kanban .o_kanban_group[data-value="Fermé"] .o_kanban_header {
+    border-left: 4px solid #6c757d !important;
+}
+
+/* Avatar utilisateur */
+.o_ccdoc_ticket_kanban .o_field_many2one_avatar_user img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+}
+
+/* Améliorer l'espacement des informations */
+.o_ccdoc_ticket_kanban .oe_kanban_content {
+    padding: 8px;
+}
+
+.o_ccdoc_ticket_kanban .o_kanban_record_title {
+    font-weight: 600;
+    color: #495057;
+}
+
+.o_ccdoc_ticket_kanban .o_kanban_record_bottom {
+    border-top: 1px solid #eee;
+    padding-top: 8px;
+    margin-top: 8px;
+}

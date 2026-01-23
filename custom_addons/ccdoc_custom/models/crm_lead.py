@@ -209,17 +209,24 @@ class CrmLead(models.Model):
                     'partner_id': self.partner_id.id,
                     'x_ref_offre': ref_offre_bu,
                     'x_bu_ids': [(6, 0, [bu.id])],
-                    'x_statut': self.x_statut,
-                    'x_responsable': self.x_responsable.id,
+                    'x_etat': 'attente_validation',  # État initial du projet
+                    'x_responsable': self.x_responsable.id if self.x_responsable else False,
                     'x_deadline': self.x_deadline,
                     'x_priorite': self.x_priorite,
-                    'x_avancement': self.x_avancement,
+                    'x_avancement': self.x_avancement or 0,
                     'x_date_demande': self.x_date_demande,
-                    'x_forecast': str(self.x_forecast),
+                    'x_date_depot': self.x_date_depot,
+                    'x_date_validation_dc': self.x_date_validation_dc,
+                    'x_date_validation_dt': self.x_date_validation_dt,
+                    'x_date_commande': self.x_date_commande,
+                    'x_forecast': self.x_forecast or 0.0,
                     'x_blocage': self.x_blocage,
                     'x_etape_suivante': self.x_etape_suivante,
                 })
                 self._ccdoc_create_wbs(project)
+                
+                # Lier le projet à l'opportunité
+                self.project_id = project.id
             self._ccdoc_create_sale_order_bu(bu, ref_offre_bu)
 
     def _generate_ref_offre(self):
@@ -272,7 +279,7 @@ class CrmLead(models.Model):
     x_date_validation_dt = fields.Date(string='Date Validation DT', tracking=True)
     x_date_commande = fields.Date(string='Date Commande', tracking=True)
     x_statut = fields.Char(string='Statut', tracking=True)
-    x_forecast = fields.Float(string='Forecast', tracking=True)
+    x_forecast = fields.Float(string='Forecast (%)', tracking=True)
     x_responsable = fields.Many2one('res.users', string='Responsable', tracking=True)
     x_deadline = fields.Date(string='Deadline', tracking=True)
     x_priorite = fields.Selection([

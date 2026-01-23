@@ -1,9 +1,18 @@
 <odoo>
+    <!-- Vue formulaire héritée -->
     <record id="view_project_form_ccdoc" model="ir.ui.view">
         <field name="name">project.project.form.ccdoc</field>
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
+            <!-- Ajouter le champ État en haut du formulaire -->
+            <xpath expr="//sheet" position="inside">
+                <group>
+                    <group>
+                        <field name="x_etat" widget="statusbar" options="{'clickable': '1'}"/>
+                    </group>
+                </group>
+            </xpath>
             <xpath expr="//sheet/notebook" position="inside">
                 <page string="Informations CCDOC">
                     <group>
@@ -11,24 +20,28 @@
                             <field name="x_ref_offre"/>
                             <field name="x_bu_ids" widget="many2many_tags"/>
                         </group>
-                        <group string="Statut et Responsabilité">
-                            <field name="x_statut"/>
+                        <group string="État et Responsabilité">
+                            <field name="x_etat"/>
                             <field name="x_responsable"/>
                             <field name="x_priorite"/>
                             <field name="x_equipe" widget="many2many_tags"/>
                         </group>
                         <group string="Dates et Planification initiale">
                             <field name="x_date_demande"/>
+                            <field name="x_date_depot"/>
+                            <field name="x_date_validation_dc"/>
+                            <field name="x_date_validation_dt"/>
                             <field name="x_date_debut"/>
                             <field name="x_date_fin"/>
                             <field name="x_deadline"/>
                             <field name="x_charge_prevue"/>
                         </group>
                         <group string="Suivi">
-                            <field name="x_avancement"/>
+                            <field name="x_avancement" widget="progressbar"/>
                             <field name="x_forecast"/>
                             <field name="x_blocage"/>
                             <field name="x_etape_suivante"/>
+                            <field name="x_motif_blocage" invisible="x_etat != 'bloque'"/>
                         </group>
                         <group string="Budget">
                             <field name="x_budget_prevu"/>
@@ -42,4 +55,147 @@
             </xpath>
         </field>
     </record>
+
+    <!-- Vue Kanban des projets par état -->
+    <record id="view_project_kanban_ccdoc" model="ir.ui.view">
+        <field name="name">project.project.kanban.ccdoc</field>
+        <field name="model">project.project</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="x_etat" class="o_kanban_small_column">
+                <field name="x_etat"/>
+                <field name="x_color"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="x_ref_offre"/>
+                <field name="x_responsable"/>
+                <field name="x_priorite"/>
+                <field name="x_avancement"/>
+                <field name="x_deadline"/>
+                <templates>
+                    <t t-name="kanban-menu">
+                        <a role="menuitem" type="edit" class="dropdown-item">Modifier</a>
+                        <a role="menuitem" type="delete" class="dropdown-item">Supprimer</a>
+                    </t>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click o_kanban_record_has_image_fill" 
+                             t-att-style="'border-left: 4px solid ' + (record.x_priorite.raw_value == 'elevee' ? '#dc3545' : record.x_priorite.raw_value == 'moyenne' ? '#ffc107' : '#28a745')">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top mb-2">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                        <span class="o_kanban_record_subtitle text-muted">
+                                            <field name="x_ref_offre"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div class="mb-1">
+                                        <span class="badge" t-att-class="record.x_priorite.raw_value == 'elevee' ? 'text-bg-danger' : record.x_priorite.raw_value == 'moyenne' ? 'text-bg-warning' : 'text-bg-success'">
+                                            <field name="x_priorite"/>
+                                        </span>
+                                    </div>
+                                    <div t-if="record.partner_id.value" class="mb-1">
+                                        <i class="fa fa-building me-1"/> <field name="partner_id"/>
+                                    </div>
+                                    <div t-if="record.x_responsable.value" class="mb-1">
+                                        <i class="fa fa-user me-1"/> <field name="x_responsable"/>
+                                    </div>
+                                    <div t-if="record.x_deadline.value" class="mb-1">
+                                        <i class="fa fa-calendar me-1"/> <field name="x_deadline"/>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_bottom mt-2">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="x_avancement" widget="progressbar" options="{'max_value': 100}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Vue liste des projets -->
+    <record id="view_project_list_ccdoc" model="ir.ui.view">
+        <field name="name">project.project.list.ccdoc</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="x_etat" widget="badge" decoration-info="x_etat == 'en_cours'" 
+                       decoration-warning="x_etat in ('attente_validation', 'attente_paiement')"
+                       decoration-danger="x_etat == 'bloque'"
+                       decoration-success="x_etat in ('termine', 'en_production')"/>
+                <field name="x_ref_offre"/>
+                <field name="x_priorite"/>
+                <field name="x_responsable"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Hériter de l'action principale des projets pour grouper par état -->
+    <record id="project.open_view_project_all" model="ir.actions.act_window">
+        <field name="context">{'default_x_etat': 'attente_validation', 'search_default_group_by_x_etat': 1}</field>
+    </record>
+
+    <!-- Ajouter un filtre de groupe par état dans la recherche -->
+    <record id="view_project_search_ccdoc" model="ir.ui.view">
+        <field name="name">project.project.search.ccdoc</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search/group" position="inside">
+                <filter string="État" name="group_by_x_etat" context="{'group_by': 'x_etat'}"/>
+            </xpath>
+            <xpath expr="//search/filter[@name='inactive']" position="after">
+                <separator/>
+                <filter string="Attente validation" name="filter_attente_validation" domain="[('x_etat', '=', 'attente_validation')]"/>
+                <filter string="Attente paiement" name="filter_attente_paiement" domain="[('x_etat', '=', 'attente_paiement')]"/>
+                <filter string="En cours" name="filter_en_cours" domain="[('x_etat', '=', 'en_cours')]"/>
+                <filter string="Bloqué" name="filter_bloque" domain="[('x_etat', '=', 'bloque')]"/>
+                <filter string="En recette" name="filter_en_recette" domain="[('x_etat', '=', 'en_recette')]"/>
+                <filter string="En production" name="filter_en_production" domain="[('x_etat', '=', 'en_production')]"/>
+                <filter string="Terminé" name="filter_termine" domain="[('x_etat', '=', 'termine')]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Hériter de la vue Kanban par défaut des projets -->
+    <record id="view_project_kanban_inherit_ccdoc" model="ir.ui.view">
+        <field name="name">project.project.kanban.inherit.ccdoc</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="default_group_by">x_etat</attribute>
+            </xpath>
+            <xpath expr="//kanban/field[@name='partner_id']" position="after">
+                <field name="x_etat"/>
+                <field name="x_ref_offre"/>
+                <field name="x_priorite"/>
+                <field name="x_avancement"/>
+            </xpath>
+            <xpath expr="//div[hasclass('o_kanban_record_bottom')]" position="before">
+                <div class="mb-1">
+                    <span t-if="record.x_etat.value" class="badge" t-att-class="{
+                        'text-bg-warning': record.x_etat.raw_value == 'attente_validation' or record.x_etat.raw_value == 'attente_paiement',
+                        'text-bg-primary': record.x_etat.raw_value == 'en_cours',
+                        'text-bg-danger': record.x_etat.raw_value == 'bloque',
+                        'text-bg-info': record.x_etat.raw_value == 'en_recette' or record.x_etat.raw_value == 'en_production',
+                        'text-bg-success': record.x_etat.raw_value == 'termine'
+                    }">
+                        <field name="x_etat"/>
+                    </span>
+                </div>
+                <div t-if="record.x_ref_offre.value" class="text-muted small mb-1">
+                    <i class="fa fa-tag"/> <field name="x_ref_offre"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
