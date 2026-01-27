@@ -109,7 +109,7 @@
                        decoration-danger="sla_status == 'overdue'"/>
                 <field name="create_date"/>
                 <field name="date_deadline"/>
-                <field name="is_closed" column_invisible="1"/>
+                <field name="is_closed" invisible="1"/>
             </tree>
         </field>
     </record>
