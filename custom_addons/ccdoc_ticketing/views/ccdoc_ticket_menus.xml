@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Menu Ticketing sous CCDOC -->
+    <!-- Menu principal Ticketing -->
     <menuitem id="menu_ccdoc_ticketing_root"
               name="Ticketing"
-              parent="ccdoc_custom.menu_ccdoc_root"
+              web_icon="ccdoc_ticketing,static/description/icon.png"
               sequence="25"/>
 
     <!-- Sous-menus -->
