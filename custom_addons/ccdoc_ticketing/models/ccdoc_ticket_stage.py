@@ -6,7 +6,7 @@ class CcdocTicketStage(models.Model):
     _description = 'Étape de ticket'
     _order = 'sequence, id'
 
-    name = fields.Char(string='Nom', required=True, translate=True)
+    name = fields.Char(string='Nom de letape', required=True, translate=True)
     sequence = fields.Integer(string='Séquence', default=10)
     description = fields.Text(string='Description')
     fold = fields.Boolean(string='Replié dans Kanban', default=False)
