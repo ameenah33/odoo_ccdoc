@@ -17,5 +17,6 @@
         <field name="amount_type">percent</field>
         <field name="active">True</field>
         <field name="company_id" eval="1"/>
+        <field name="country_id" ref="base.sn"/>
     </record>
 </odoo>
