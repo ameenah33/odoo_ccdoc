@@ -41,7 +41,7 @@
                             <field name="x_forecast"/>
                             <field name="x_blocage"/>
                             <field name="x_etape_suivante"/>
-                            <field name="x_motif_blocage" invisible="x_etat != 'bloque'"/>
+                            <field name="x_motif_blocage"/>
                         </group>
                         <group string="Budget">
                             <field name="x_budget_prevu"/>
