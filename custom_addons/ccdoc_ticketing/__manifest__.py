@@ -17,7 +17,7 @@
         - Historique et chatter
     """,
     'author': 'CCDOC',
-    'depends': ['base', 'mail', 'project', 'contacts'],
+    'depends': ['base', 'mail', 'project', 'contacts', 'ccdoc_custom'],
     'data': [
         'security/ccdoc_ticketing_security.xml',
         'security/ir.model.access.csv',
