@@ -68,7 +68,7 @@
                             </group>
                             <group>
                                 <field name="save_template"/>
-                                <field name="mapping_template_id" readonly="1" invisible="not mapping_template_id"/>
+                                <field name="mapping_template_id" readonly="1" invisible="1"/>
                             </group>
                         </group>
                     </group>
