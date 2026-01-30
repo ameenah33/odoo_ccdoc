@@ -198,7 +198,7 @@
                         <button class="oe_stat_button" type="object" name="action_open_partner" icon="fa-user" attrs="{'invisible': [('partner_id', '=', False)]}">\
                             <field name="partner_id" widget="statinfo" string="Client"/>
                         </button>
-                        <button class="oe_stat_button" icon="fa-clock-o" invisible="sla_status == 'on_track'">
+                        <button class="oe_stat_button" icon="fa-clock-o" attrs="{'invisible': [('sla_status', '=', 'on_track')]}">\
                             <field name="sla_status" widget="badge"
                                    decoration-success="sla_status == 'on_track'"
                                    decoration-warning="sla_status == 'at_risk'"
