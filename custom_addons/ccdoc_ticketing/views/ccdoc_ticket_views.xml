@@ -181,6 +181,9 @@
             <form>
                 <header>
                     <field name="is_closed" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="sla_status" invisible="1"/>
                     <button name="action_assign_to_me" type="object" string="M'assigner"
                             class="btn-secondary"
                             invisible="user_id"/>
