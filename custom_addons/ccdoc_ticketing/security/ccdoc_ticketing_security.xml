@@ -1,36 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- Groupe d'utilisateurs Ticketing -->
-        <record id="group_ccdoc_ticketing_user" model="res.groups">
-            <field name="name">Utilisateur Ticketing</field>
+
+        <!-- ========================================== -->
+        <!-- GROUPES UTILISATEURS (Conforme au CDC)   -->
+        <!-- ========================================== -->
+
+        <!-- 1. DEMANDEUR: Crée et suit ses propres tickets -->
+        <record id="group_ccdoc_ticketing_requester" model="res.groups">
+            <field name="name">Ticketing / Demandeur</field>
             <field name="category_id" ref="base.module_category_services"/>
+            <field name="comment">Crée et suit uniquement ses propres tickets de support</field>
         </record>
-        
-        <record id="group_ccdoc_ticketing_manager" model="res.groups">
-            <field name="name">Manager Ticketing</field>
+
+        <!-- 2. AGENT SUPPORT: Prend en charge, traite et clôture les tickets -->
+        <record id="group_ccdoc_ticketing_agent" model="res.groups">
+            <field name="name">Ticketing / Agent Support</field>
             <field name="category_id" ref="base.module_category_services"/>
-            <field name="implied_ids" eval="[(4, ref('group_ccdoc_ticketing_user'))]"/>
+            <field name="implied_ids" eval="[(4, ref('group_ccdoc_ticketing_requester'))]"/>
+            <field name="comment">Prend en charge, traite et clôture les tickets assignés ou non assignés</field>
         </record>
-        
-        <!-- Règle: Les utilisateurs voient leurs propres tickets et ceux non assignés -->
-        <record id="rule_ccdoc_ticket_user" model="ir.rule">
-            <field name="name">Tickets: Utilisateur voit ses tickets</field>
+
+        <!-- 3. SUPERVISEUR SUPPORT: Suit l'activité, valide clôtures, consulte rapports -->
+        <record id="group_ccdoc_ticketing_supervisor" model="res.groups">
+            <field name="name">Ticketing / Superviseur Support</field>
+            <field name="category_id" ref="base.module_category_services"/>
+            <field name="implied_ids" eval="[(4, ref('group_ccdoc_ticketing_agent'))]"/>
+            <field name="comment">Suit l'activité, valide certaines clôtures, consulte les rapports</field>
+        </record>
+
+        <!-- 4. ADMINISTRATEUR: Paramètre le module et gère les droits -->
+        <record id="group_ccdoc_ticketing_admin" model="res.groups">
+            <field name="name">Ticketing / Administrateur</field>
+            <field name="category_id" ref="base.module_category_services"/>
+            <field name="implied_ids" eval="[(4, ref('group_ccdoc_ticketing_supervisor'))]"/>
+            <field name="comment">Paramètre le module et gère les droits d'accès</field>
+        </record>
+
+
+        <!-- ========================================== -->
+        <!-- RÈGLES D'ACCÈS AUX DONNÉES               -->
+        <!-- ========================================== -->
+
+        <!-- Règle 1: DEMANDEUR voit UNIQUEMENT ses propres tickets -->
+        <record id="rule_ccdoc_ticket_requester" model="ir.rule">
+            <field name="name">Tickets: Demandeur voit uniquement ses tickets</field>
+            <field name="model_id" ref="model_ccdoc_ticket"/>
+            <field name="domain_force">[('partner_id.user_ids', 'in', [user.id])]</field>
+            <field name="groups" eval="[(4, ref('group_ccdoc_ticketing_requester'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Règle 2: AGENT voit ses tickets assignés + non assignés -->
+        <record id="rule_ccdoc_ticket_agent" model="ir.rule">
+            <field name="name">Tickets: Agent voit tickets assignés et non assignés</field>
             <field name="model_id" ref="model_ccdoc_ticket"/>
             <field name="domain_force">[
                 '|',
                 ('user_id', '=', user.id),
                 ('user_id', '=', False)
             ]</field>
-            <field name="groups" eval="[(4, ref('group_ccdoc_ticketing_user'))]"/>
+            <field name="groups" eval="[(4, ref('group_ccdoc_ticketing_agent'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
         </record>
-        
-        <!-- Règle: Les managers voient tous les tickets -->
-        <record id="rule_ccdoc_ticket_manager" model="ir.rule">
-            <field name="name">Tickets: Manager voit tout</field>
+
+        <!-- Règle 3: SUPERVISEUR voit tous les tickets -->
+        <record id="rule_ccdoc_ticket_supervisor" model="ir.rule">
+            <field name="name">Tickets: Superviseur voit tous les tickets</field>
             <field name="model_id" ref="model_ccdoc_ticket"/>
             <field name="domain_force">[(1, '=', 1)]</field>
-            <field name="groups" eval="[(4, ref('group_ccdoc_ticketing_manager'))]"/>
+            <field name="groups" eval="[(4, ref('group_ccdoc_ticketing_supervisor'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
         </record>
+
+        <!-- Règle 4: ADMINISTRATEUR a accès complet -->
+        <record id="rule_ccdoc_ticket_admin" model="ir.rule">
+            <field name="name">Tickets: Admin a accès complet</field>
+            <field name="model_id" ref="model_ccdoc_ticket"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_ccdoc_ticketing_admin'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
     </data>
 </odoo>

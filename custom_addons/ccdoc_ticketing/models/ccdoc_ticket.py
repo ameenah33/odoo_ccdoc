@@ -5,9 +5,17 @@ from datetime import datetime, timedelta
 class CcdocTicket(models.Model):
     _name = 'ccdoc.ticket'
     _description = 'Ticket CCDOC'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'mail.alias.mixin']
     _order = 'priority desc, create_date desc'
     _rec_name = 'display_name'
+
+    # Configuration de l'alias email
+    def _alias_get_creation_values(self):
+        """Valeurs pour la création automatique de tickets depuis un email."""
+        values = super()._alias_get_creation_values()
+        values['alias_model_id'] = self.env['ir.model']._get('ccdoc.ticket').id
+        values['alias_force_thread_id'] = 0
+        return values
 
     # Champs principaux
     name = fields.Char(string='Référence', readonly=True, copy=False, default='Nouveau')
@@ -124,15 +132,45 @@ class CcdocTicket(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            # Générer le numéro de ticket
             if vals.get('name', 'Nouveau') == 'Nouveau':
                 vals['name'] = self.env['ir.sequence'].next_by_code('ccdoc.ticket') or 'Nouveau'
-        return super().create(vals_list)
+
+            # Auto-assigner le partner_id pour les demandeurs
+            # Si l'utilisateur est un demandeur et n'a pas spécifié de client,
+            # on utilise le contact lié à son compte utilisateur
+            if not vals.get('partner_id'):
+                user = self.env.user
+                # Vérifier si l'utilisateur a le rôle Demandeur
+                if user.has_group('ccdoc_ticketing.group_ccdoc_ticketing_requester'):
+                    # Trouver le partner lié à l'utilisateur
+                    if user.partner_id:
+                        vals['partner_id'] = user.partner_id.id
+
+        tickets = super().create(vals_list)
+
+        # Envoyer notification de création pour chaque ticket
+        for ticket in tickets:
+            ticket._send_notification_creation()
+
+        return tickets
+
+    def _send_notification_creation(self):
+        """Envoie une notification par email lors de la création du ticket."""
+        template = self.env.ref('ccdoc_ticketing.mail_template_ticket_creation', raise_if_not_found=False)
+        if template and self.partner_id:
+            template.send_mail(self.id, force_send=True, email_values={
+                'email_to': self.partner_id.email,
+            })
     
     def write(self, vals):
+        # Garder trace de l'ancienne étape pour notification
+        old_stages = {ticket.id: ticket.stage_id for ticket in self}
+
         # Enregistrer la date d'assignation
         if 'user_id' in vals and vals['user_id']:
             vals['date_assigned'] = datetime.now()
-        
+
         # Enregistrer la date de clôture
         if 'stage_id' in vals:
             stage = self.env['ccdoc.ticket.stage'].browse(vals['stage_id'])
@@ -140,8 +178,34 @@ class CcdocTicket(models.Model):
                 vals['date_closed'] = datetime.now()
             else:
                 vals['date_closed'] = False
-        
-        return super().write(vals)
+
+        result = super().write(vals)
+
+        # Envoyer notifications si changement d'étape
+        if 'stage_id' in vals:
+            for ticket in self:
+                old_stage = old_stages.get(ticket.id)
+                if old_stage and old_stage.id != ticket.stage_id.id:
+                    ticket._send_notification_stage_change(old_stage, ticket.stage_id)
+
+        return result
+
+    def _send_notification_stage_change(self, old_stage, new_stage):
+        """Envoie une notification par email lors du changement d'étape."""
+        # Notification de clôture
+        if new_stage.is_closed:
+            template = self.env.ref('ccdoc_ticketing.mail_template_ticket_closed', raise_if_not_found=False)
+        else:
+            # Notification de changement de statut général
+            template = self.env.ref('ccdoc_ticketing.mail_template_ticket_stage_change', raise_if_not_found=False)
+
+        if template and self.partner_id:
+            template.with_context(
+                old_stage_name=old_stage.name,
+                new_stage_name=new_stage.name
+            ).send_mail(self.id, force_send=True, email_values={
+                'email_to': self.partner_id.email,
+            })
     
     def action_assign_to_me(self):
         """Assigner le ticket à l'utilisateur courant."""
@@ -166,6 +230,58 @@ class CcdocTicket(models.Model):
             'stage_id': default_stage.id if default_stage else False,
             'date_closed': False,
         })
+
+    def action_open_partner(self):
+        """Ouvrir la fiche du client."""
+        self.ensure_one()
+        if not self.partner_id:
+            return False
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Client',
+            'res_model': 'res.partner',
+            'res_id': self.partner_id.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+    @api.model
+    def _cron_check_sla_alerts(self):
+        """Vérifie les tickets avec SLA dépassé ou à risque et envoie des alertes.
+        Cette méthode est appelée par le cron job toutes les heures.
+        """
+        # Rechercher les tickets ouverts avec SLA à risque ou dépassé
+        tickets = self.search([
+            ('is_closed', '=', False),
+            ('sla_status', 'in', ['overdue', 'at_risk']),
+            ('user_id', '!=', False),  # Uniquement les tickets assignés
+        ])
+
+        template = self.env.ref('ccdoc_ticketing.mail_template_ticket_sla_alert', raise_if_not_found=False)
+
+        if not template:
+            return
+
+        # Envoyer une alerte pour chaque ticket
+        for ticket in tickets:
+            # Vérifier si une alerte n'a pas déjà été envoyée récemment (dans les dernières 24h)
+            last_message = self.env['mail.message'].search([
+                ('model', '=', 'ccdoc.ticket'),
+                ('res_id', '=', ticket.id),
+                ('subject', 'like', 'Alerte SLA'),
+            ], order='create_date desc', limit=1)
+
+            # Si aucun message ou dernier message il y a plus de 24h
+            if not last_message or (datetime.now() - last_message.create_date).total_seconds() > 86400:
+                try:
+                    template.send_mail(ticket.id, force_send=True, email_values={
+                        'email_to': ticket.user_id.email,
+                    })
+                except Exception as e:
+                    # Log l'erreur mais continue avec les autres tickets
+                    import logging
+                    _logger = logging.getLogger(__name__)
+                    _logger.error(f"Erreur lors de l'envoi de l'alerte SLA pour le ticket {ticket.name}: {str(e)}")
 
 
 class CcdocTicketTag(models.Model):

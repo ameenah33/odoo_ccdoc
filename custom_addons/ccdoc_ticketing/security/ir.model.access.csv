@@ -1,9 +1,17 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_ccdoc_ticket_user,ccdoc.ticket.user,model_ccdoc_ticket,group_ccdoc_ticketing_user,1,1,1,0
-access_ccdoc_ticket_manager,ccdoc.ticket.manager,model_ccdoc_ticket,group_ccdoc_ticketing_manager,1,1,1,1
-access_ccdoc_ticket_stage_user,ccdoc.ticket.stage.user,model_ccdoc_ticket_stage,group_ccdoc_ticketing_user,1,0,0,0
-access_ccdoc_ticket_stage_manager,ccdoc.ticket.stage.manager,model_ccdoc_ticket_stage,group_ccdoc_ticketing_manager,1,1,1,1
-access_ccdoc_ticket_category_user,ccdoc.ticket.category.user,model_ccdoc_ticket_category,group_ccdoc_ticketing_user,1,0,0,0
-access_ccdoc_ticket_category_manager,ccdoc.ticket.category.manager,model_ccdoc_ticket_category,group_ccdoc_ticketing_manager,1,1,1,1
-access_ccdoc_ticket_tag_user,ccdoc.ticket.tag.user,model_ccdoc_ticket_tag,group_ccdoc_ticketing_user,1,0,0,0
-access_ccdoc_ticket_tag_manager,ccdoc.ticket.tag.manager,model_ccdoc_ticket_tag,group_ccdoc_ticketing_manager,1,1,1,1
+access_ccdoc_ticket_requester,Tickets (Demandeur),model_ccdoc_ticket,group_ccdoc_ticketing_requester,1,0,1,0
+access_ccdoc_ticket_stage_requester,Étapes (Demandeur),model_ccdoc_ticket_stage,group_ccdoc_ticketing_requester,1,0,0,0
+access_ccdoc_ticket_category_requester,Catégories (Demandeur),model_ccdoc_ticket_category,group_ccdoc_ticketing_requester,1,0,0,0
+access_ccdoc_ticket_tag_requester,Tags (Demandeur),model_ccdoc_ticket_tag,group_ccdoc_ticketing_requester,1,0,0,0
+access_ccdoc_ticket_agent,Tickets (Agent),model_ccdoc_ticket,group_ccdoc_ticketing_agent,1,1,1,0
+access_ccdoc_ticket_stage_agent,Étapes (Agent),model_ccdoc_ticket_stage,group_ccdoc_ticketing_agent,1,0,0,0
+access_ccdoc_ticket_category_agent,Catégories (Agent),model_ccdoc_ticket_category,group_ccdoc_ticketing_agent,1,0,0,0
+access_ccdoc_ticket_tag_agent,Tags (Agent),model_ccdoc_ticket_tag,group_ccdoc_ticketing_agent,1,0,0,0
+access_ccdoc_ticket_supervisor,Tickets (Superviseur),model_ccdoc_ticket,group_ccdoc_ticketing_supervisor,1,1,1,0
+access_ccdoc_ticket_stage_supervisor,Étapes (Superviseur),model_ccdoc_ticket_stage,group_ccdoc_ticketing_supervisor,1,1,1,0
+access_ccdoc_ticket_category_supervisor,Catégories (Superviseur),model_ccdoc_ticket_category,group_ccdoc_ticketing_supervisor,1,1,1,0
+access_ccdoc_ticket_tag_supervisor,Tags (Superviseur),model_ccdoc_ticket_tag,group_ccdoc_ticketing_supervisor,1,1,1,0
+access_ccdoc_ticket_admin,Tickets (Admin),model_ccdoc_ticket,group_ccdoc_ticketing_admin,1,1,1,1
+access_ccdoc_ticket_stage_admin,Étapes (Admin),model_ccdoc_ticket_stage,group_ccdoc_ticketing_admin,1,1,1,1
+access_ccdoc_ticket_category_admin,Catégories (Admin),model_ccdoc_ticket_category,group_ccdoc_ticketing_admin,1,1,1,1
+access_ccdoc_ticket_tag_admin,Tags (Admin),model_ccdoc_ticket_tag,group_ccdoc_ticketing_admin,1,1,1,1

@@ -1,36 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Menu principal Ticketing -->
+    <!-- Menu principal Ticketing (visible pour tous les rôles Ticketing) -->
     <menuitem id="menu_ccdoc_ticketing_root"
               name="Ticketing"
-              web_icon="ccdoc_ticketing,static/description/icon.png"
+              web_icon="project,static/description/icon.png"
+              groups="ccdoc_ticketing.group_ccdoc_ticketing_requester"
               sequence="25"/>
 
     <!-- Sous-menus -->
     <menuitem id="menu_ccdoc_ticketing_tickets"
               name="Tickets"
               parent="menu_ccdoc_ticketing_root"
+              groups="ccdoc_ticketing.group_ccdoc_ticketing_requester"
               sequence="10"/>
 
     <menuitem id="menu_ccdoc_ticket_all"
               name="Tous les tickets"
               parent="menu_ccdoc_ticketing_tickets"
               action="action_ccdoc_ticket"
+              groups="ccdoc_ticketing.group_ccdoc_ticketing_agent"
               sequence="10"/>
 
     <menuitem id="menu_ccdoc_ticket_my"
               name="Mes tickets"
               parent="menu_ccdoc_ticketing_tickets"
               action="action_ccdoc_ticket_my"
+              groups="ccdoc_ticketing.group_ccdoc_ticketing_requester"
               sequence="20"/>
 
-    <!-- Configuration -->
+    <!-- Configuration (visible uniquement pour les Administrateurs) -->
     <menuitem id="menu_ccdoc_ticketing_config"
               name="Configuration"
               parent="menu_ccdoc_ticketing_root"
               sequence="100"
-              groups="group_ccdoc_ticketing_manager"/>
+              groups="ccdoc_ticketing.group_ccdoc_ticketing_admin"/>
 
     <menuitem id="menu_ccdoc_ticket_stage"
               name="Étapes"

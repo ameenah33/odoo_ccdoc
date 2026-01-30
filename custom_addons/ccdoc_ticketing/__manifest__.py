@@ -13,8 +13,10 @@
         - Lien avec les projets et clients
         - Vue Kanban avec drag & drop
         - Priorités et catégories
-        - SLA basique
+        - SLA basique avec alertes automatiques
         - Historique et chatter
+        - Notifications par email automatiques
+        - Création de tickets par email
     """,
     'author': 'CCDOC',
     'depends': ['base', 'mail', 'project', 'contacts'],
@@ -23,6 +25,9 @@
         'security/ir.model.access.csv',
         'data/ccdoc_ticket_sequence.xml',
         'data/ccdoc_ticket_stages.xml',
+        'data/mail_templates.xml',
+        'data/ccdoc_ticket_cron.xml',
+        'data/assign_admin_group.xml',
         'views/ccdoc_ticket_views.xml',
         'views/ccdoc_ticket_category_views.xml',
         'views/ccdoc_ticket_menus.xml',

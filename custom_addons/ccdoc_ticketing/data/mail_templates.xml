@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Template: Accusé de réception à la création du ticket -->
+        <record id="mail_template_ticket_creation" model="mail.template">
+            <field name="name">CCDOC Ticketing: Accusé de réception</field>
+            <field name="model_id" ref="model_ccdoc_ticket"/>
+            <field name="subject">Votre ticket {{ object.name }} a été créé</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{ object.partner_id.email }}</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">
+    <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family: Arial, Helvetica, sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+        <tbody>
+            <tr>
+                <td align="center">
+                    <table border="0" cellpadding="0" cellspacing="0" width="600" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                        <tbody>
+                            <!-- HEADER -->
+                            <tr>
+                                <td align="center" style="min-width: 590px;">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                        <tr>
+                                            <td valign="middle">
+                                                <span style="font-size: 20px; font-weight: bold; color: #875A7B;">
+                                                    CCDOC - Support Technique
+                                                </span>
+                                            </td>
+                                            <td valign="middle" align="right">
+                                                <img style="padding: 0px; margin: 0px; height: auto; width: 80px;" src="/logo.png?company={{ object.company_id.id }}" alt="{{ object.company_id.name }}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" style="text-align:center;">
+                                                <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <!-- CONTENT -->
+                            <tr>
+                                <td align="center" style="min-width: 590px;">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                        <tr>
+                                            <td valign="top" style="font-size: 13px;">
+                                                <div>
+                                                    <p>Bonjour <t t-if="object.partner_id.name"><t t-out="object.partner_id.name"/></t>,</p>
+
+                                                    <p>Nous avons bien reçu votre demande de support.</p>
+
+                                                    <p><strong>Votre ticket a été créé avec succès :</strong></p>
+
+                                                    <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                                                        <tr style="background-color: #f8f9fa;">
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Numéro du ticket</td>
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><t t-out="object.name"/></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Sujet</td>
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><t t-out="object.subject"/></td>
+                                                        </tr>
+                                                        <tr style="background-color: #f8f9fa;">
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Priorité</td>
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><t t-out="dict(object._fields['priority'].selection).get(object.priority)"/></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Statut</td>
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><t t-out="object.stage_id.name"/></td>
+                                                        </tr>
+                                                        <tr style="background-color: #f8f9fa;">
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Date de création</td>
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><t t-out="format_datetime(object.create_date, dt_format='dd/MM/yyyy HH:mm', tz=object.user_id.tz or 'UTC')"/></td>
+                                                        </tr>
+                                                    </table>
+
+                                                    <p>Notre équipe prendra en charge votre demande dans les plus brefs délais.</p>
+
+                                                    <p>Vous recevrez une notification par email à chaque mise à jour de votre ticket.</p>
+
+                                                    <p>Cordialement,<br/>
+                                                    L'équipe Support CCDOC</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <!-- FOOTER -->
+                            <tr>
+                                <td align="center" style="min-width: 590px;">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                        <tr>
+                                            <td valign="middle" align="left">
+                                                <span style="font-size: 10px; color: #8c8c8c;">
+                                                    Ce message a été envoyé automatiquement. Merci de ne pas y répondre.
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+            </field>
+        </record>
+
+        <!-- Template: Changement de statut -->
+        <record id="mail_template_ticket_stage_change" model="mail.template">
+            <field name="name">CCDOC Ticketing: Changement de statut</field>
+            <field name="model_id" ref="model_ccdoc_ticket"/>
+            <field name="subject">Mise à jour de votre ticket {{ object.name }}</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{ object.partner_id.email }}</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">
+    <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family: Arial, Helvetica, sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+        <tbody>
+            <tr>
+                <td align="center">
+                    <table border="0" cellpadding="0" cellspacing="0" width="600" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                        <tbody>
+                            <!-- HEADER -->
+                            <tr>
+                                <td align="center" style="min-width: 590px;">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                        <tr>
+                                            <td valign="middle">
+                                                <span style="font-size: 20px; font-weight: bold; color: #875A7B;">
+                                                    CCDOC - Support Technique
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" style="text-align:center;">
+                                                <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <!-- CONTENT -->
+                            <tr>
+                                <td align="center" style="min-width: 590px;">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                        <tr>
+                                            <td valign="top" style="font-size: 13px;">
+                                                <div>
+                                                    <p>Bonjour <t t-if="object.partner_id.name"><t t-out="object.partner_id.name"/></t>,</p>
+
+                                                    <p>Le statut de votre ticket <strong><t t-out="object.name"/></strong> a été mis à jour.</p>
+
+                                                    <div style="background-color: #e3f2fd; padding: 15px; border-left: 4px solid #2196f3; margin: 20px 0;">
+                                                        <p style="margin: 0;"><strong>Nouveau statut:</strong> <t t-out="object.stage_id.name"/></p>
+                                                    </div>
+
+                                                    <p><strong>Détails du ticket :</strong></p>
+                                                    <ul>
+                                                        <li><strong>Sujet:</strong> <t t-out="object.subject"/></li>
+                                                        <li><strong>Priorité:</strong> <t t-out="dict(object._fields['priority'].selection).get(object.priority)"/></li>
+                                                        <li t-if="object.user_id"><strong>Assigné à:</strong> <t t-out="object.user_id.name"/></li>
+                                                    </ul>
+
+                                                    <p>Nous vous tiendrons informé de l'évolution de votre demande.</p>
+
+                                                    <p>Cordialement,<br/>
+                                                    L'équipe Support CCDOC</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+            </field>
+        </record>
+
+        <!-- Template: Clôture du ticket -->
+        <record id="mail_template_ticket_closed" model="mail.template">
+            <field name="name">CCDOC Ticketing: Ticket clôturé</field>
+            <field name="model_id" ref="model_ccdoc_ticket"/>
+            <field name="subject">Votre ticket {{ object.name }} a été clôturé</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{ object.partner_id.email }}</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">
+    <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family: Arial, Helvetica, sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+        <tbody>
+            <tr>
+                <td align="center">
+                    <table border="0" cellpadding="0" cellspacing="0" width="600" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                        <tbody>
+                            <!-- HEADER -->
+                            <tr>
+                                <td align="center" style="min-width: 590px;">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                        <tr>
+                                            <td valign="middle">
+                                                <span style="font-size: 20px; font-weight: bold; color: #875A7B;">
+                                                    CCDOC - Support Technique
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" style="text-align:center;">
+                                                <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <!-- CONTENT -->
+                            <tr>
+                                <td align="center" style="min-width: 590px;">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                        <tr>
+                                            <td valign="top" style="font-size: 13px;">
+                                                <div>
+                                                    <p>Bonjour <t t-if="object.partner_id.name"><t t-out="object.partner_id.name"/></t>,</p>
+
+                                                    <p>Votre ticket <strong><t t-out="object.name"/></strong> a été traité et clôturé.</p>
+
+                                                    <div style="background-color: #e8f5e9; padding: 15px; border-left: 4px solid #4caf50; margin: 20px 0;">
+                                                        <p style="margin: 0;">✓ <strong>Ticket clôturé avec succès</strong></p>
+                                                    </div>
+
+                                                    <p><strong>Résumé :</strong></p>
+                                                    <ul>
+                                                        <li><strong>Sujet:</strong> <t t-out="object.subject"/></li>
+                                                        <li><strong>Date de création:</strong> <t t-out="format_datetime(object.create_date, dt_format='dd/MM/yyyy HH:mm', tz=object.user_id.tz or 'UTC')"/></li>
+                                                        <li><strong>Date de clôture:</strong> <t t-out="format_datetime(object.date_closed, dt_format='dd/MM/yyyy HH:mm', tz=object.user_id.tz or 'UTC')"/></li>
+                                                        <li t-if="object.user_id"><strong>Traité par:</strong> <t t-out="object.user_id.name"/></li>
+                                                    </ul>
+
+                                                    <t t-if="object.resolution">
+                                                        <p><strong>Résolution :</strong></p>
+                                                        <div style="background-color: #f5f5f5; padding: 10px; border-radius: 4px;">
+                                                            <t t-out="object.resolution"/>
+                                                        </div>
+                                                    </t>
+
+                                                    <p>Nous espérons que votre problème a été résolu de manière satisfaisante.</p>
+
+                                                    <p>Si vous avez besoin d'une assistance supplémentaire, n'hésitez pas à créer un nouveau ticket.</p>
+
+                                                    <p>Merci de votre confiance,<br/>
+                                                    L'équipe Support CCDOC</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+            </field>
+        </record>
+
+        <!-- Template: Alerte SLA dépassé -->
+        <record id="mail_template_ticket_sla_alert" model="mail.template">
+            <field name="name">CCDOC Ticketing: Alerte SLA</field>
+            <field name="model_id" ref="model_ccdoc_ticket"/>
+            <field name="subject">⚠️ Alerte SLA - Ticket {{ object.name }}</field>
+            <field name="email_from">{{ user.email_formatted }}</field>
+            <field name="email_to">{{ object.user_id.email }}</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">
+    <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family: Arial, Helvetica, sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+        <tbody>
+            <tr>
+                <td align="center">
+                    <table border="0" cellpadding="0" cellspacing="0" width="600" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                        <tbody>
+                            <!-- HEADER -->
+                            <tr>
+                                <td align="center" style="min-width: 590px;">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                        <tr>
+                                            <td valign="middle">
+                                                <span style="font-size: 20px; font-weight: bold; color: #d32f2f;">
+                                                    ⚠️ ALERTE SLA - CCDOC Support
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" style="text-align:center;">
+                                                <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <!-- CONTENT -->
+                            <tr>
+                                <td align="center" style="min-width: 590px;">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                        <tr>
+                                            <td valign="top" style="font-size: 13px;">
+                                                <div>
+                                                    <p>Bonjour <t t-if="object.user_id.name"><t t-out="object.user_id.name"/></t>,</p>
+
+                                                    <div style="background-color: #ffebee; padding: 15px; border-left: 4px solid #d32f2f; margin: 20px 0;">
+                                                        <p style="margin: 0; color: #d32f2f; font-weight: bold;">⚠️ Le SLA du ticket <t t-out="object.name"/> est dépassé ou à risque !</p>
+                                                    </div>
+
+                                                    <p><strong>Détails du ticket :</strong></p>
+                                                    <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                                                        <tr style="background-color: #f8f9fa;">
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Numéro</td>
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><t t-out="object.name"/></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Sujet</td>
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><t t-out="object.subject"/></td>
+                                                        </tr>
+                                                        <tr style="background-color: #f8f9fa;">
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Client</td>
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><t t-out="object.partner_id.name or 'Non défini'"/></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Priorité</td>
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><t t-out="dict(object._fields['priority'].selection).get(object.priority)"/></td>
+                                                        </tr>
+                                                        <tr style="background-color: #f8f9fa;">
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Statut SLA</td>
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6; color: #d32f2f; font-weight: bold;">
+                                                                <t t-if="object.sla_status == 'overdue'">🔴 EN RETARD</t>
+                                                                <t t-elif="object.sla_status == 'at_risk'">🟠 À RISQUE</t>
+                                                                <t t-else="">⚠️ <t t-out="dict(object._fields['sla_status'].selection).get(object.sla_status)"/></t>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Deadline SLA</td>
+                                                            <td style="padding: 10px; border: 1px solid #dee2e6;"><t t-out="format_datetime(object.sla_deadline, dt_format='dd/MM/yyyy HH:mm', tz=object.user_id.tz or 'UTC')"/></td>
+                                                        </tr>
+                                                    </table>
+
+                                                    <p style="color: #d32f2f; font-weight: bold;">⚠️ Action requise : Merci de traiter ce ticket en priorité !</p>
+
+                                                    <p>Cordialement,<br/>
+                                                    Système de notification CCDOC</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+            </field>
+        </record>
+
+    </data>
+</odoo>
