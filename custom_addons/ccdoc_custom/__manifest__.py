@@ -9,9 +9,10 @@
         - Ajoute des champs personnalisés aux Projets
     """,
     'author': 'CCDOC',
-    'depends': ['crm', 'project', 'sale', 'mail', 'purchase'],
+    'depends': ['crm', 'project', 'sale', 'mail', 'purchase', 'account'],
     'data': [
         'security/ir.model.access.csv',
+        'data/account_tax_data.xml',
         'wizard/crm_lead_justify_win_wizard_view.xml',
         'wizard/sale_order_import_wizard_view.xml',
         'views/crm_lead_views.xml',

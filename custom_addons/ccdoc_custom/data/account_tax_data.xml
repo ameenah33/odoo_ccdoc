@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- ========================================== -->
+        <!-- TAXES DE VENTE                            -->
+        <!-- ========================================== -->
+
+        <!-- Exonéré (0%) -->
+        <record id="tax_sale_exempt" model="account.tax">
+            <field name="name">Exonéré (0%)</field>
+            <field name="amount">0.00</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="description">EXON</field>
+        </record>
+
+        <!-- TVA 10% -->
+        <record id="tax_sale_10" model="account.tax">
+            <field name="name">TVA 10%</field>
+            <field name="amount">10.00</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="description">TVA10</field>
+        </record>
+
+        <!-- TVA 15% -->
+        <record id="tax_sale_15" model="account.tax">
+            <field name="name">TVA 15%</field>
+            <field name="amount">15.00</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="description">TVA15</field>
+        </record>
+
+        <!-- TVA 18% -->
+        <record id="tax_sale_18" model="account.tax">
+            <field name="name">TVA 18%</field>
+            <field name="amount">18.00</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="description">TVA18</field>
+        </record>
+
+        <!-- TVA 20% -->
+        <record id="tax_sale_20" model="account.tax">
+            <field name="name">TVA 20%</field>
+            <field name="amount">20.00</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="description">TVA20</field>
+        </record>
+
+
+        <!-- ========================================== -->
+        <!-- TAXES D'ACHAT                             -->
+        <!-- ========================================== -->
+
+        <!-- Exonéré Achat (0%) -->
+        <record id="tax_purchase_exempt" model="account.tax">
+            <field name="name">Exonéré Achat (0%)</field>
+            <field name="amount">0.00</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="description">EXON-ACH</field>
+        </record>
+
+        <!-- TVA Achat 10% -->
+        <record id="tax_purchase_10" model="account.tax">
+            <field name="name">TVA Achat 10%</field>
+            <field name="amount">10.00</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="description">TVA10-ACH</field>
+        </record>
+
+        <!-- TVA Achat 15% -->
+        <record id="tax_purchase_15" model="account.tax">
+            <field name="name">TVA Achat 15%</field>
+            <field name="amount">15.00</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="description">TVA15-ACH</field>
+        </record>
+
+        <!-- TVA Achat 18% -->
+        <record id="tax_purchase_18" model="account.tax">
+            <field name="name">TVA Achat 18%</field>
+            <field name="amount">18.00</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="description">TVA18-ACH</field>
+        </record>
+
+        <!-- TVA Achat 20% -->
+        <record id="tax_purchase_20" model="account.tax">
+            <field name="name">TVA Achat 20%</field>
+            <field name="amount">20.00</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="description">TVA20-ACH</field>
+        </record>
+
+    </data>
+</odoo>
