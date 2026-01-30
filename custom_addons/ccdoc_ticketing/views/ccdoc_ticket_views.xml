@@ -183,19 +183,19 @@
                     <field name="is_closed" invisible="1"/>
                     <button name="action_assign_to_me" type="object" string="M'assigner"
                             class="btn-secondary"
-                            invisible="user_id"/>
+                            attrs="{'invisible': [('user_id', '!=', False)]}"/>
                     <button name="action_close" type="object" string="Fermer"
                             class="btn-primary"
-                            invisible="is_closed"/>
+                            attrs="{'invisible': [('is_closed', '=', True)]}"/>
                     <button name="action_reopen" type="object" string="Réouvrir"
                             class="btn-secondary"
-                            invisible="not is_closed"/>
+                            attrs="{'invisible': [('is_closed', '=', False)]}"/>
                     <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
                     <!-- Badge SLA en haut -->
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" type="object" name="action_open_partner" icon="fa-user" invisible="not partner_id">
+                        <button class="oe_stat_button" type="object" name="action_open_partner" icon="fa-user" attrs="{'invisible': [('partner_id', '=', False)]}">\
                             <field name="partner_id" widget="statinfo" string="Client"/>
                         </button>
                         <button class="oe_stat_button" icon="fa-clock-o" invisible="sla_status == 'on_track'">
