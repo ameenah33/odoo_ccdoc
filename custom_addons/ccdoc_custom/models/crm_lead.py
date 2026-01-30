@@ -55,7 +55,14 @@ class CrmLead(models.Model):
     
     # Statut et responsabilité
     x_statut = fields.Char(string='Statut', tracking=True)
-    x_responsable = fields.Many2one('res.users', string='Responsable', tracking=True)
+    x_responsable = fields.Many2many(
+        'res.users',
+        'crm_lead_responsable_rel',
+        'lead_id',
+        'user_id',
+        string='Responsables',
+        tracking=True
+    )
     x_priorite = fields.Selection([
         ('faible', 'Faible'),
         ('moyenne', 'Moyenne'),
@@ -366,7 +373,7 @@ class CrmLead(models.Model):
                     'x_ref_offre': ref_offre_bu,
                     'x_bu_ids': [(6, 0, [bu.id])],
                     'x_etat': 'attente_validation',
-                    'x_responsable': self.x_responsable.id if self.x_responsable else False,
+                    'x_responsable': [(6, 0, self.x_responsable.ids)] if self.x_responsable else False,
                     'x_deadline': self.x_deadline,
                     'x_priorite': self.x_priorite,
                     'x_avancement': self.x_avancement or 0,

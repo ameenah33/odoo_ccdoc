@@ -19,7 +19,13 @@ class ProjectProject(models.Model):
     ], string='État du projet', default='attente_validation', tracking=True, group_expand='_group_expand_states')
     
     x_statut = fields.Char(string='Statut')  # Gardé pour compatibilité
-    x_responsable = fields.Many2one('res.users', string='Responsable')
+    x_responsable = fields.Many2many(
+        'res.users',
+        'project_project_responsable_rel',
+        'project_id',
+        'user_id',
+        string='Responsables'
+    )
     x_deadline = fields.Date(string='Deadline')
     x_priorite = fields.Selection([
         ('elevee', 'Élevée'),

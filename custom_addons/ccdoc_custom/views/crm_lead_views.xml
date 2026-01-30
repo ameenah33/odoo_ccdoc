@@ -33,7 +33,7 @@
                     </group>
                     <group string="Statut et Responsabilité">
                         <field name="x_statut"/>
-                        <field name="x_responsable"/>
+                        <field name="x_responsable" widget="many2many_tags"/>
                         <field name="x_priorite"/>
                     </group>
                     <group string="Planification">

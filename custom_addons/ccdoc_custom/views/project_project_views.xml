@@ -22,7 +22,7 @@
                         </group>
                         <group string="État et Responsabilité">
                             <field name="x_etat"/>
-                            <field name="x_responsable"/>
+                            <field name="x_responsable" widget="many2many_tags"/>
                             <field name="x_priorite"/>
                             <field name="x_equipe" widget="many2many_tags"/>
                         </group>
@@ -126,13 +126,13 @@
         <field name="inherit_id" ref="project.view_project"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
-                <field name="x_etat" widget="badge" decoration-info="x_etat == 'en_cours'" 
+                <field name="x_etat" widget="badge" decoration-info="x_etat == 'en_cours'"
                        decoration-warning="x_etat in ('attente_validation', 'attente_paiement')"
                        decoration-danger="x_etat == 'bloque'"
                        decoration-success="x_etat in ('termine', 'en_production')"/>
                 <field name="x_ref_offre"/>
                 <field name="x_priorite"/>
-                <field name="x_responsable"/>
+                <field name="x_responsable" widget="many2many_tags"/>
             </xpath>
         </field>
     </record>
