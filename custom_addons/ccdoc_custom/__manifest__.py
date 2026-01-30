@@ -23,6 +23,7 @@
         'data/ccdoc_config.xml',
         'data/ccdoc_config_force.xml',
         'data/mail_templates.xml',
+        'data/crm_cron.xml',
     ],
     'assets': {
         'web.assets_backend': [

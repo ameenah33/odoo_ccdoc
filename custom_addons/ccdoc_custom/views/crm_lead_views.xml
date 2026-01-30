@@ -23,7 +23,9 @@
                         <group string="Dates de Validation">
                             <field name="x_date_depot"/>
                             <field name="x_date_validation_dc"/>
+                            <field name="x_deadline_validation_dc"/>
                             <field name="x_date_validation_dt"/>
+                            <field name="x_deadline_validation_dt"/>
                             <field name="x_date_commande"/>
                         </group>
                     </group>

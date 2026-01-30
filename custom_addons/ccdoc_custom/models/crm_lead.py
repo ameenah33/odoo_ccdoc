@@ -48,7 +48,9 @@ class CrmLead(models.Model):
     # Dates
     x_date_depot = fields.Date(string='Date Dépôt', tracking=True)
     x_date_validation_dc = fields.Date(string='Date Validation DC', tracking=True)
+    x_deadline_validation_dc = fields.Date(string='Échéance Validation DC', tracking=True)
     x_date_validation_dt = fields.Date(string='Date Validation DT', tracking=True)
+    x_deadline_validation_dt = fields.Date(string='Échéance Validation DT', tracking=True)
     x_date_commande = fields.Date(string='Date Commande', tracking=True)
     x_date_demande = fields.Date(string='Date de demande', tracking=True)
     x_deadline = fields.Date(string='Deadline', tracking=True)
@@ -465,16 +467,16 @@ class CrmLead(models.Model):
     def _ccdoc_create_sale_order_bu(self, bu, ref_offre_bu):
         """Crée une commande de vente liée à l'opportunité et à une BU."""
         product = self.env['product.product'].search([], limit=1)
-        
+
         for lead in self:
             if not lead.partner_id:
                 continue
-            
+
             existing = self.env['sale.order'].search([
                 ('opportunity_id', '=', lead.id),
                 ('client_order_ref', '=', ref_offre_bu)
             ], limit=1)
-            
+
             if not existing:
                 so = self.env['sale.order'].create({
                     'partner_id': lead.partner_id.id,
@@ -489,3 +491,94 @@ class CrmLead(models.Model):
                     'name': f"{lead.name} [{bu.name}]",
                     'price_unit': lead.x_forecast or 0.0,
                 })
+
+    # =====================================================================
+    # NOTIFICATIONS D'ÉCHÉANCE
+    # =====================================================================
+
+    @api.model
+    def _cron_check_validation_deadlines(self):
+        """Vérifie les échéances de validation et envoie des notifications."""
+        today = fields.Date.context_today(self)
+
+        # Chercher les opportunités avec échéances DC arrivant aujourd'hui ou dépassées
+        leads_dc = self.search([
+            ('x_deadline_validation_dc', '<=', today),
+            ('x_date_validation_dc', '=', False),  # Pas encore validé
+            ('active', '=', True),
+        ])
+
+        for lead in leads_dc:
+            lead._send_validation_reminder('DC', lead.x_deadline_validation_dc)
+
+        # Chercher les opportunités avec échéances DT arrivant aujourd'hui ou dépassées
+        leads_dt = self.search([
+            ('x_deadline_validation_dt', '<=', today),
+            ('x_date_validation_dt', '=', False),  # Pas encore validé
+            ('active', '=', True),
+        ])
+
+        for lead in leads_dt:
+            lead._send_validation_reminder('DT', lead.x_deadline_validation_dt)
+
+    def _send_validation_reminder(self, validation_type, deadline):
+        """Envoie un rappel de validation aux responsables."""
+        self.ensure_one()
+        today = fields.Date.context_today(self)
+
+        # Calculer si c'est en retard
+        days_overdue = (today - deadline).days if deadline < today else 0
+        is_overdue = days_overdue > 0
+
+        # Préparer le message
+        if is_overdue:
+            status_msg = f"⚠️ EN RETARD de {days_overdue} jour(s)"
+            status_color = "#dc3545"
+        else:
+            status_msg = "📅 ÉCHÉANCE AUJOURD'HUI"
+            status_color = "#ffc107"
+
+        body = Markup('''
+        <div style="background: linear-gradient(135deg, {color} 0%%, #764ba2 100%%);
+                    padding: 15px; border-radius: 10px; color: white; margin-bottom: 15px;">
+            <h3 style="margin: 0; color: white;">⏰ Rappel de Validation {type}</h3>
+        </div>
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px;
+                    border-left: 4px solid {color};">
+            <p><strong>Statut:</strong> <span style="color: {color}; font-weight: bold;">{status}</span></p>
+            <p><strong>📋 Opportunité:</strong> {name}</p>
+            <p><strong>🏢 Client:</strong> {partner}</p>
+            <p><strong>📅 Échéance:</strong> {deadline}</p>
+            <p><strong>📝 Référence:</strong> {ref}</p>
+            <p style="margin-top: 15px; padding: 10px; background-color: #fff3cd; border-radius: 5px;">
+                💡 <strong>Action requise:</strong> Veuillez valider cette opportunité au plus vite.
+            </p>
+        </div>
+        ''').format(
+            type=validation_type,
+            color=status_color,
+            status=status_msg,
+            name=self.name,
+            partner=self.partner_id.name if self.partner_id else 'Non défini',
+            deadline=deadline.strftime('%d/%m/%Y'),
+            ref=self.x_ref_offre or 'Non définie'
+        )
+
+        # Déterminer les destinataires (responsables + user_id par défaut)
+        partner_ids = []
+        if self.x_responsable:
+            partner_ids.extend(self.x_responsable.mapped('partner_id').ids)
+        if self.user_id and self.user_id.partner_id:
+            partner_ids.append(self.user_id.partner_id.id)
+
+        # Supprimer les doublons
+        partner_ids = list(set(partner_ids))
+
+        if partner_ids:
+            self.message_post(
+                body=body,
+                subject=f"⏰ Rappel Validation {validation_type} - {self.name}",
+                partner_ids=partner_ids,
+                message_type='notification',
+                subtype_xmlid='mail.mt_comment',
+            )
