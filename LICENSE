@@ -1,0 +1,43 @@
+GNU GENERAL PUBLIC LICENSE
+Version 3, 29 June 2007
+
+Copyright (c) 2024-2026 Aminata Diagne
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+==============================================================================
+
+ADDITIONAL TERMS FOR ODOO MODULES
+----------------------------------
+
+This project contains custom Odoo modules developed by Aminata Diagne.
+
+These modules are licensed under the GNU General Public License v3.0 (GPL-3.0)
+to ensure compatibility with Odoo Community Edition and Odoo Enterprise.
+
+KEY TERMS:
+- You are free to use, modify, and distribute this software
+- If you distribute modified versions, you MUST share the source code
+- Commercial use is allowed BUT you must share any modifications
+- You must preserve copyright notices and license information
+- Any derivative work must also be licensed under GPL-3.0
+
+AUTHOR AND COPYRIGHT HOLDER
+---------------------------
+Aminata Diagne
+Project: CCDOC - Custom Odoo Management System
+Year: 2024-2026
+
+For the full GNU GPL-3.0 license text, visit:
+https://www.gnu.org/licenses/gpl-3.0.en.html

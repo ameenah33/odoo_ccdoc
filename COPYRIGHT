@@ -1,0 +1,43 @@
+COPYRIGHT NOTICE
+================
+
+Copyright (c) 2024-2026 Aminata Diagne
+Tous droits réservés. All rights reserved.
+
+Ce projet et tous les fichiers associés sont la propriété exclusive de Aminata Diagne.
+
+DROITS ET RESTRICTIONS
+-----------------------
+
+Aucune partie de ce logiciel ne peut être :
+- Reproduite
+- Distribuée
+- Modifiée
+- Utilisée commercialement
+- Transmise sous quelque forme que ce soit
+
+sans l'autorisation écrite explicite et préalable du propriétaire.
+
+PROPRIÉTÉ INTELLECTUELLE
+-------------------------
+
+Ce projet comprend :
+- Les modules Odoo personnalisés dans custom_addons/
+- Les configurations et paramètres
+- La structure de la base de données
+- Toute documentation associée
+
+CONTACT
+-------
+
+Pour toute demande d'autorisation ou question concernant l'utilisation de ce logiciel :
+Propriétaire : Aminata Diagne
+Projet : CCDOC - Système de gestion Odoo
+Année : 2024-2026
+
+AVERTISSEMENT LÉGAL
+-------------------
+
+Toute utilisation non autorisée de ce logiciel constitue une violation du droit d'auteur
+et peut entraîner des poursuites judiciaires conformément aux lois en vigueur sur la
+propriété intellectuelle.
