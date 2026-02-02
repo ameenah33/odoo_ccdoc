@@ -58,4 +58,6 @@
         </field>
     </record>
 
+    <!-- Le bouton "Générer des Pistes" est masqué via CSS dans hide_quick_buttons.css -->
+
 </odoo>

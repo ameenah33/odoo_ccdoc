@@ -93,3 +93,11 @@ button[name="action_set_won_rainbowman"] {
     display: none !important;
 }
 
+/* ========================================= */
+/* Masquer le bouton Générer des Pistes dans CRM */
+/* ========================================= */
+button[name="action_generate_leads"],
+.o_list_button button[name="action_generate_leads"] {
+    display: none !important;
+}
+
