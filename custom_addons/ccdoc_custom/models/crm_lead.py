@@ -101,16 +101,17 @@ class CrmLead(models.Model):
     @api.onchange('stage_id')
     def _onchange_stage_id_check_won(self):
         """Avertissement lors du changement d'étape vers Gagné."""
+        # Ne demander la justification que si on passe de NON-GAGNÉ à GAGNÉ
         if self.stage_id and self.stage_id.is_won:
-            if not self.x_justification_win or not self.x_signed_po_attachment_id:
-                if self._origin and self._origin.stage_id:
+            if self._origin and self._origin.stage_id and not self._origin.stage_id.is_won:
+                if not self.x_justification_win or not self.x_signed_po_attachment_id:
                     self.stage_id = self._origin.stage_id
-                return {
-                    'warning': {
-                        'title': '⚠️ Justification requise',
-                        'message': "Utilisez le bouton 'Justificatif de gain' avant de passer en 'Gagné'.",
+                    return {
+                        'warning': {
+                            'title': '⚠️ Justification requise',
+                            'message': "Utilisez le bouton 'Justificatif de gain' avant de passer en 'Gagné'.",
+                        }
                     }
-                }
 
     # =====================================================================
     # MÉTHODE CREATE (CORRIGÉE POUR ODOO 17)
@@ -264,6 +265,7 @@ class CrmLead(models.Model):
     def _check_won_justification(self):
         """Contrainte : empêche le passage en Gagné sans justification."""
         for lead in self:
+            # Ne vérifier que si l'étape actuelle est marquée comme "Gagné" (is_won=True)
             if lead.stage_id and lead.stage_id.is_won:
                 if not lead.x_justification_win or not lead.x_signed_po_attachment_id:
                     raise ValidationError(
