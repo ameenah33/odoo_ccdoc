@@ -148,27 +148,25 @@ class CrmLead(models.Model):
                 all_leads = self.env['crm.lead'].search([('x_ref_offre', '!=', False)])
                 for lead in all_leads:
                     if lead.x_ref_offre:
-                        # Parcourir toutes les refs (peut y en avoir plusieurs séparées par virgule)
-                        for ref in lead.x_ref_offre.split(','):
-                            ref = ref.strip()
-                            try:
-                                # Extraire le numéro à la fin (après le dernier tiret)
-                                num = int(ref.split('-')[-1])
-                                if num > last_num:
-                                    last_num = num
-                            except (ValueError, IndexError):
-                                continue
+                        try:
+                            # Extraire le numéro à la fin (après le dernier tiret)
+                            num = int(lead.x_ref_offre.split('-')[-1])
+                            if num > last_num:
+                                last_num = num
+                        except (ValueError, IndexError):
+                            continue
                 
                 # Incrémenter pour la nouvelle opportunité
                 new_num = last_num + 1
                 
-                # Construire les références
-                ref_offres = []
+                # Construire les préfixes des BU sélectionnées
+                bu_prefixes = []
                 for bu in bu_objs:
                     bu_prefix = bu.name[:3].upper() if bu.name else 'XXX'
-                    ref_offres.append(f"{bu_prefix}-{date_str}-{new_num}")
+                    bu_prefixes.append(bu_prefix)
                 
-                vals['x_ref_offre'] = ', '.join(ref_offres) if ref_offres else ''
+                # Format : BU1-BU2-...-DATE-SEQUENCE
+                vals['x_ref_offre'] = '-'.join(bu_prefixes) + f"-{date_str}-{new_num}"
         
         return super().create(vals_list)
 
