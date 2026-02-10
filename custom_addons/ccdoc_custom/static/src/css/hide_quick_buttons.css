@@ -87,11 +87,11 @@ button[name="action_set_won_rainbowman"] {
 }
 
 /* ========================================= */
-/* Masquer le bouton Envoyer par e-mail sur les devis/commandes */
+/* Bouton Envoyer par e-mail sur les devis/commandes (visible) */
 /* ========================================= */
-.o_form_view button[name="action_quotation_send"] {
+/* .o_form_view button[name="action_quotation_send"] {
     display: none !important;
-}
+} */
 
 /* ========================================= */
 /* Masquer le bouton Générer des Pistes dans CRM */
