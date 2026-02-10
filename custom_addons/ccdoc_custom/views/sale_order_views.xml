@@ -17,7 +17,8 @@
         </field>
     </record>
 
-    <!-- Masquer le bouton Envoyer par e-mail -->
+    <!-- Bouton Envoyer par e-mail (visible) -->
+    <!-- 
     <record id="view_sale_order_form_hide_send_email" model="ir.ui.view">
         <field name="name">sale.order.form.hide.send.email</field>
         <field name="model">sale.order</field>
@@ -28,5 +29,6 @@
             </xpath>
         </field>
     </record>
+    -->
 
 </odoo>
