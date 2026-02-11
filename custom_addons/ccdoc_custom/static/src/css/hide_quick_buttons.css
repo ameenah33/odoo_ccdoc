@@ -104,7 +104,13 @@ button[name="action_generate_leads"],
 /* ========================================= */
 /* Masquer le lien "Mon compte Odoo.com" dans le menu utilisateur */
 /* ========================================= */
-a[data-menu="odoo_account"] {
+[data-menu="odoo_account"],
+a[data-menu="odoo_account"],
+.o-dropdown-item[data-menu="odoo_account"],
+.dropdown-item[data-menu="odoo_account"],
+.o_user_menu a[data-menu="odoo_account"],
+.o-dropdown--menu span[data-menu="odoo_account"],
+.o-dropdown--menu a[data-menu="odoo_account"] {
     display: none !important;
 }
 
