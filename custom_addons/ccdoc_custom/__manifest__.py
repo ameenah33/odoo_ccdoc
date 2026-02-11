@@ -27,6 +27,7 @@
     'assets': {
         'web.assets_backend': [
             'ccdoc_custom/static/src/css/hide_quick_buttons.css',
+            'ccdoc_custom/static/src/js/hide_odoo_account.js',
         ],
     },
     'installable': True,
