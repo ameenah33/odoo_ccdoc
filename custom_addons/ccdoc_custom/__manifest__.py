@@ -19,6 +19,7 @@
         'views/project_project_views.xml',
         'views/ccdoc_bu_menu.xml',
         'views/sale_order_views.xml',
+        'views/hide_odoo_account.xml',
         'data/ccdoc_config.xml',
         'data/ccdoc_config_force.xml',
         'data/mail_templates.xml',
