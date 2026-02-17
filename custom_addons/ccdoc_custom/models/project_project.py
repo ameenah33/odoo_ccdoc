@@ -5,6 +5,8 @@ from odoo.exceptions import ValidationError
 class ProjectProject(models.Model):
     _inherit = 'project.project'
 
+    partner_id = fields.Many2one('res.partner', string='Client', required=True)
+
     x_ref_offre = fields.Char(string='REF Offre', size=50)
     x_bu_ids = fields.Many2many('ccdoc.bu', string='BU')
 
