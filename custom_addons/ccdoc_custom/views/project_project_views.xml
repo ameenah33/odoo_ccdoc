@@ -37,8 +37,7 @@
                             <field name="x_charge_prevue"/>
                         </group>
                         <group string="Suivi">
-                            <field name="x_avancement" widget="progressbar"/>
-                            <field name="x_forecast"/>
+                            <field name="x_avancement"/>
                             <field name="x_blocage"/>
                             <field name="x_etape_suivante"/>
                             <field name="x_motif_blocage"/>
@@ -46,9 +45,6 @@
                         <group string="Budget">
                             <field name="x_budget_prevu"/>
                             <field name="x_budget_realise"/>
-                        </group>
-                        <group string="Clôture / Perte">
-                            <field name="x_motif_perte"/>
                         </group>
                     </group>
                 </page>
@@ -58,7 +54,7 @@
                         <p class="text-muted">Cliquez sur le bouton ci-dessous pour accéder au tableau kanban des tâches.</p>
                         <button name="%(project.act_project_project_2_project_task_all)d"
                                 type="action"
-                                string="📋 Ouvrir les tâches"
+                                string="Ouvrir les tâches"
                                 class="btn btn-primary btn-lg"
                                 context="{'default_project_id': active_id, 'search_default_project_id': active_id}"
                         />
