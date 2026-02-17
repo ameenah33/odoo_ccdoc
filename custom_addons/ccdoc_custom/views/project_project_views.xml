@@ -53,18 +53,16 @@
                     </group>
                 </page>
                 <page string="Tâches" name="tasks_page">
-                    <field name="task_ids">
-                        <tree string="Tâches" editable="bottom">
-                            <field name="company_id" column_invisible="1"/>
-                            <field name="project_id" column_invisible="1"/>
-                            <field name="priority" widget="priority" optional="show"/>
-                            <field name="name" string="Titre"/>
-                            <field name="user_ids" widget="many2many_avatar_user" string="Assigné à" optional="show"/>
-                            <field name="stage_id" string="Étape"/>
-                            <field name="date_deadline" string="Date limite" optional="show"/>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
-                        </tree>
-                    </field>
+                    <div class="text-center py-4">
+                        <h3>Gestion des tâches du projet</h3>
+                        <p class="text-muted">Cliquez sur le bouton ci-dessous pour accéder au tableau kanban des tâches.</p>
+                        <button name="%(project.act_project_project_2_project_task_all)d"
+                                type="action"
+                                string="📋 Ouvrir les tâches"
+                                class="btn btn-primary btn-lg"
+                                context="{'default_project_id': active_id, 'search_default_project_id': active_id}"
+                        />
+                    </div>
                 </page>
             </xpath>
         </field>
