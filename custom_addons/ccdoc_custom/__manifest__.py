@@ -1,6 +1,6 @@
 {
     'name': 'CCDOC Customizations',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Customizations',
     'summary': 'Champs personnalisés CCDOC pour CRM et Projets',
     'description': """
@@ -12,11 +12,9 @@
     'depends': ['crm', 'project', 'sale', 'mail', 'purchase', 'account'],
     'data': [
         'security/ir.model.access.csv',
-        'data/ccdoc_project_stages.xml',
         'wizard/crm_lead_justify_win_wizard_view.xml',
         'wizard/sale_order_import_wizard_view.xml',
         'views/crm_lead_views.xml',
-        'views/ccdoc_project_stage_views.xml',
         'views/project_project_views.xml',
         'views/ccdoc_bu_menu.xml',
         'views/sale_order_views.xml',
@@ -25,7 +23,6 @@
         'data/mail_templates.xml',
         'data/crm_cron.xml',
     ],
-    'post_init_hook': '_migrate_project_stages',
     'assets': {
         'web.assets_backend': [
             'ccdoc_custom/static/src/css/hide_quick_buttons.css',

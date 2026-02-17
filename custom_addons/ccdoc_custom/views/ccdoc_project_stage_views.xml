@@ -51,7 +51,7 @@
 
     <!-- Action pour les étapes de projet -->
     <record id="action_ccdoc_project_stage" model="ir.actions.act_window">
-        <field name="name">Étapes de projet</field>
+        <field name="name">Étapes CCDOC</field>
         <field name="res_model">ccdoc.project.stage</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
@@ -67,7 +67,7 @@
 
     <!-- Menu sous Configuration > Projets -->
     <menuitem id="menu_ccdoc_project_stage"
-              name="Étapes de projet"
+              name="Étapes CCDOC"
               parent="project.menu_project_config"
               action="action_ccdoc_project_stage"
               sequence="5"/>

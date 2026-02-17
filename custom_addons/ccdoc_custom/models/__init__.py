@@ -1,5 +1,4 @@
 from . import crm_lead
-from . import ccdoc_project_stage
 from . import project_project
 from . import ccdoc_bu
 from . import sale_order
