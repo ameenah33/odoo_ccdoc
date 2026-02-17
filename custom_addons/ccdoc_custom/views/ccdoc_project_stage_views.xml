@@ -1,0 +1,75 @@
+<odoo>
+
+    <!-- Vue formulaire des étapes de projet -->
+    <record id="view_ccdoc_project_stage_form" model="ir.ui.view">
+        <field name="name">ccdoc.project.stage.form</field>
+        <field name="model">ccdoc.project.stage</field>
+        <field name="arch" type="xml">
+            <form string="Étape de projet">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nom de l'étape"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Configuration">
+                            <field name="sequence"/>
+                            <field name="color" widget="color_picker"/>
+                            <field name="fold"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Comportement">
+                            <field name="is_blocking"/>
+                            <field name="is_closing"/>
+                            <field name="project_count"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description" placeholder="Description optionnelle de cette étape..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue liste des étapes de projet -->
+    <record id="view_ccdoc_project_stage_tree" model="ir.ui.view">
+        <field name="name">ccdoc.project.stage.tree</field>
+        <field name="model">ccdoc.project.stage</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="is_blocking"/>
+                <field name="is_closing"/>
+                <field name="fold"/>
+                <field name="project_count"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action pour les étapes de projet -->
+    <record id="action_ccdoc_project_stage" model="ir.actions.act_window">
+        <field name="name">Étapes de projet</field>
+        <field name="res_model">ccdoc.project.stage</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créez votre première étape de projet
+            </p>
+            <p>
+                Les étapes permettent de suivre l'avancement des projets dans la vue Kanban.
+                Vous pouvez les réordonner par glisser-déposer.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu sous Configuration > Projets -->
+    <menuitem id="menu_ccdoc_project_stage"
+              name="Étapes de projet"
+              parent="project.menu_project_config"
+              action="action_ccdoc_project_stage"
+              sequence="5"/>
+
+</odoo>

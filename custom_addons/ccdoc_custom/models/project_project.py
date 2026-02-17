@@ -1,36 +1,38 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
+
 class ProjectProject(models.Model):
     _inherit = 'project.project'
 
     x_ref_offre = fields.Char(string='REF Offre', size=50)
     x_bu_ids = fields.Many2many('ccdoc.bu', string='BU')
-    
-    # États du projet CCDOC
-    x_etat = fields.Selection([
-        ('attente_validation', 'Attente de validation'),
-        ('attente_paiement', 'Attente de paiement'),
-        ('en_cours', 'En cours'),
-        ('bloque', 'Bloqué'),
-        ('en_recette', 'En recette'),
-        ('en_production', 'En production'),
-        ('termine', 'Terminé'),
-    ], string='État du projet', default='attente_validation', tracking=True, group_expand='_group_expand_states')
-    
+
+    # ── Étape dynamique (remplace l'ancien champ Selection x_etat) ──
+    x_stage_id = fields.Many2one(
+        'ccdoc.project.stage',
+        string='Étape du projet',
+        tracking=True,
+        group_expand='_read_group_stage_ids',
+        default=lambda self: self._default_stage_id(),
+        copy=True,
+        index=True,
+        ondelete='restrict',
+    )
+
     x_statut = fields.Char(string='Statut')  # Gardé pour compatibilité
     x_responsable = fields.Many2many(
         'res.users',
         'project_project_responsable_rel',
         'project_id',
         'user_id',
-        string='Responsables'
+        string='Responsables',
     )
     x_deadline = fields.Date(string='Deadline')
     x_priorite = fields.Selection([
         ('elevee', 'Élevée'),
         ('moyenne', 'Moyenne'),
-        ('faible', 'Faible')
+        ('faible', 'Faible'),
     ], string='Priorité')
     x_avancement = fields.Integer(string='Avancement (%)')
     x_date_demande = fields.Date(string='Date de commande')
@@ -50,34 +52,34 @@ class ProjectProject(models.Model):
     x_budget_realise = fields.Float(string='Budget réalisé')
     x_motif_perte = fields.Text(string='Motif de perte')
     x_motif_blocage = fields.Text(string='Motif de blocage')
-    
-    # Couleur pour le Kanban
+
+    # Couleur pour le Kanban — héritée de l'étape
     x_color = fields.Integer(string='Couleur', compute='_compute_color', store=True)
 
-    @api.depends('x_etat')
-    def _compute_color(self):
-        """Calcule la couleur en fonction de l'état."""
-        color_map = {
-            'attente_validation': 3,   # Jaune
-            'attente_paiement': 2,     # Orange
-            'en_cours': 10,            # Vert
-            'bloque': 1,               # Rouge
-            'en_recette': 4,           # Bleu clair
-            'en_production': 9,        # Violet
-            'termine': 7,              # Vert foncé
-        }
-        for project in self:
-            project.x_color = color_map.get(project.x_etat, 0)
+    # ── Helpers ──────────────────────────────────────────────────────
 
     @api.model
-    def _group_expand_states(self, states, domain, order):
-        """Affiche tous les états dans la vue Kanban même s'ils sont vides."""
-        return [key for key, val in self._fields['x_etat'].selection]
+    def _default_stage_id(self):
+        """Retourne la première étape par défaut (séquence la plus basse)."""
+        return self.env['ccdoc.project.stage'].search([], order='sequence, id', limit=1)
 
-    @api.onchange('x_etat')
-    def _onchange_etat(self):
-        """Actions lors du changement d'état."""
-        if self.x_etat == 'bloque' and not self.x_motif_blocage:
+    @api.model
+    def _read_group_stage_ids(self, stages, domain, order):
+        """Affiche toutes les étapes actives dans la vue Kanban, même vides."""
+        return self.env['ccdoc.project.stage'].search([], order=order or 'sequence, id')
+
+    # ── Compute / Onchange / Contraintes ─────────────────────────────
+
+    @api.depends('x_stage_id', 'x_stage_id.color')
+    def _compute_color(self):
+        """Couleur du projet = couleur de son étape."""
+        for project in self:
+            project.x_color = project.x_stage_id.color if project.x_stage_id else 0
+
+    @api.onchange('x_stage_id')
+    def _onchange_stage_id(self):
+        """Avertit si l'étape est bloquante et qu'aucun motif n'est renseigné."""
+        if self.x_stage_id and self.x_stage_id.is_blocking and not self.x_motif_blocage:
             return {
                 'warning': {
                     'title': '⚠️ Motif de blocage requis',
@@ -85,15 +87,15 @@ class ProjectProject(models.Model):
                 }
             }
 
-    @api.constrains('x_etat', 'x_motif_blocage')
+    @api.constrains('x_stage_id', 'x_motif_blocage')
     def _check_blocage_motif(self):
-        """Vérifie que le motif est renseigné si le projet est bloqué."""
+        """Vérifie que le motif est renseigné si l'étape est bloquante."""
         for project in self:
-            if project.x_etat == 'bloque' and not project.x_motif_blocage:
+            if project.x_stage_id and project.x_stage_id.is_blocking and not project.x_motif_blocage:
                 raise ValidationError(
-                    "⚠️ Le motif de blocage est obligatoire pour passer un projet en état 'Bloqué'."
+                    "⚠️ Le motif de blocage est obligatoire pour les projets dans l'étape « %s »."
+                    % project.x_stage_id.name
                 )
-
 
     def write(self, vals):
         # Si on archive (active passe à False), le motif de perte doit être renseigné
@@ -101,5 +103,7 @@ class ProjectProject(models.Model):
             for project in self:
                 motif = vals.get('x_motif_perte') or project.x_motif_perte
                 if not motif:
-                    raise ValidationError("Vous devez renseigner le motif de perte avant d'archiver le projet.")
+                    raise ValidationError(
+                        "Vous devez renseigner le motif de perte avant d'archiver le projet."
+                    )
         return super().write(vals)
