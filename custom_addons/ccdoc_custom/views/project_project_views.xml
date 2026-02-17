@@ -71,7 +71,7 @@
 
     <!-- Hériter de l'action principale des projets pour grouper par étape -->
     <record id="project.open_view_project_all" model="ir.actions.act_window">
-        <field name="context">{'search_default_group_by_stage_id': 1}</field>
+        <field name="context">{}</field>
     </record>
 
     <!-- Filtres de recherche -->
