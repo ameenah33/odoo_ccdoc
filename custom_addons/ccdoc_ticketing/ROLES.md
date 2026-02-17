@@ -1,6 +1,6 @@
 # Rôles et Droits d'accès - Module Ticketing CCDOC
 
-## Conforme au Cahier des Charges - Section 3.1 et 7
+
 
 Ce document décrit les 4 rôles utilisateurs du module Ticketing et leurs droits d'accès respectifs.
 

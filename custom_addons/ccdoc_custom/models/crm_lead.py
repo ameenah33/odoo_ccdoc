@@ -118,7 +118,6 @@ class CrmLead(models.Model):
     # =====================================================================
     
     @api.model_create_multi
-    @api.model_create_multi
     def create(self, vals_list):
         """Génération automatique de la REF Offre pour chaque opportunité créée."""
         for vals in vals_list:

@@ -60,6 +60,4 @@ class CrmLeadJustifyWinWizard(models.TransientModel):
                 body=body,
                 subject="🏆 Justificatif de gain uploadé"
             )
-        
-        lead.action_create_project_and_sale()
         return {'type': 'ir.actions.act_window_close'}

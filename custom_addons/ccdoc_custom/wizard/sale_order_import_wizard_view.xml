@@ -83,7 +83,7 @@
             </form>
         </field>
     </record>
-    
+     ase
     <record id="action_sale_order_import_wizard" model="ir.actions.act_window">
         <field name="name">Importer des lignes</field>
         <field name="res_model">sale.order.import.wizard</field>
