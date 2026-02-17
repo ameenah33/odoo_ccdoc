@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 import logging
 from markupsafe import Markup
@@ -356,13 +355,11 @@ class CrmLead(models.Model):
         ref_offres = [ref.strip() for ref in (self.x_ref_offre or '').split(',') if ref.strip()]
         
         for idx, bu in enumerate(bu_list):
-            # Déterminer la référence pour cette BU
             if idx < len(ref_offres):
                 ref_offre_bu = ref_offres[idx]
             else:
                 ref_offre_bu = f"{self.x_ref_offre or self.name}-{bu.name}"
             
-            # Créer le projet s'il n'existe pas
             existing_project = self.env['project.project'].search([
                 ('x_ref_offre', '=', ref_offre_bu)
             ], limit=1)
@@ -373,7 +370,6 @@ class CrmLead(models.Model):
                     'partner_id': self.partner_id.id if self.partner_id else False,
                     'x_ref_offre': ref_offre_bu,
                     'x_bu_ids': [(6, 0, [bu.id])],
-                    'x_etat': 'attente_validation',
                     'x_responsable': [(6, 0, self.x_responsable.ids)] if self.x_responsable else False,
                     'x_deadline': self.x_deadline,
                     'x_priorite': self.x_priorite,
@@ -383,14 +379,12 @@ class CrmLead(models.Model):
                     'x_date_validation_dc': self.x_date_validation_dc,
                     'x_date_validation_dt': self.x_date_validation_dt,
                     'x_date_commande': self.x_date_commande,
-                    'x_forecast': self.x_forecast or 0.0,
                     'x_blocage': self.x_blocage,
                     'x_etape_suivante': self.x_etape_suivante,
                 })
                 self._ccdoc_create_wbs(project)
                 self.project_id = project.id
             
-            # Créer la commande de vente
             self._ccdoc_create_sale_order_bu(bu, ref_offre_bu)
 
     # =====================================================================
