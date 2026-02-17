@@ -55,6 +55,7 @@
                 <page string="Tâches" name="tasks_page">
                     <field name="task_ids">
                         <tree string="Tâches" editable="bottom">
+                            <field name="company_id" column_invisible="1"/>
                             <field name="project_id" column_invisible="1"/>
                             <field name="priority" widget="priority" optional="show"/>
                             <field name="name" string="Titre"/>
