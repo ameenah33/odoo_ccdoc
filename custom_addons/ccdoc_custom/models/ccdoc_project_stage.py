@@ -32,11 +32,11 @@ class CcdocProjectStage(models.Model):
     )
 
     def _compute_project_count(self):
-        read_group_data = self.env['project.project']._read_group(
+        read_group_data = self.env['project.project'].read_group(
             [('x_stage_id', 'in', self.ids)],
             ['x_stage_id'],
-            ['__count'],
+            ['x_stage_id'],
         )
-        stage_counts = {stage.id: count for stage, count in read_group_data}
+        stage_counts = {d['x_stage_id'][0]: d['x_stage_id_count'] for d in read_group_data}
         for stage in self:
             stage.project_count = stage_counts.get(stage.id, 0)
