@@ -167,6 +167,8 @@
         <field name="arch" type="xml">
             <xpath expr="//kanban" position="attributes">
                 <attribute name="default_group_by">x_stage_id</attribute>
+                <!-- Supprimer le JS custom qui redirige vers les tâches au clic -->
+                <attribute name="js_class"/>
             </xpath>
             <xpath expr="//kanban/field[@name='partner_id']" position="after">
                 <field name="x_stage_id"/>
