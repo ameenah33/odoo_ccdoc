@@ -13,7 +13,6 @@
     'post_init_hook': 'post_init_hook',
     'data': [
     'views/ccdoc_bu_menu.xml',
-    'views/ccdoc_project_stage_views.xml',
     'wizard/crm_lead_justify_win_wizard_view.xml',
     'wizard/sale_order_import_wizard_view.xml',
     'views/crm_lead_views.xml',
