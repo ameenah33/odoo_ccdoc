@@ -10,6 +10,7 @@
     """,
     'author': 'CCDOC',
     'depends': ['crm', 'project', 'sale', 'mail', 'purchase', 'account'],
+    'post_init_hook': 'post_init_hook',
     'data': [
     'views/ccdoc_bu_menu.xml',
     'views/ccdoc_project_stage_views.xml',
@@ -18,6 +19,7 @@
     'views/crm_lead_views.xml',
     'views/project_project_views.xml',
     'views/sale_order_views.xml',
+    'data/project_task_stages.xml',
     'data/ccdoc_config.xml',
     'data/ccdoc_config_force.xml',
     'data/mail_templates.xml',

@@ -1,5 +1,20 @@
 from . import models
 from . import wizard
+from .models.project_project import DEFAULT_TASK_STAGE_XMLIDS
+
+
+def post_init_hook(env):
+    """Assigne les étapes de tâches prédéfinies à tous les projets existants."""
+    stages = env['project.task.type']
+    for xmlid in DEFAULT_TASK_STAGE_XMLIDS:
+        stage = env.ref(xmlid, raise_if_not_found=False)
+        if stage:
+            stages |= stage
+    if not stages:
+        return
+    projects = env['project.project'].search([])
+    for project in projects:
+        project.type_ids = [(4, s.id) for s in stages]
 
 
 def _migrate_project_stages(env):

@@ -1,6 +1,14 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
+DEFAULT_TASK_STAGE_XMLIDS = [
+    'ccdoc_custom.task_stage_attente_validation_client',
+    'ccdoc_custom.task_stage_a_faire',
+    'ccdoc_custom.task_stage_en_cours',
+    'ccdoc_custom.task_stage_bloque',
+    'ccdoc_custom.task_stage_termine',
+]
+
 
 class ProjectProject(models.Model):
     _inherit = 'project.project'
@@ -39,3 +47,19 @@ class ProjectProject(models.Model):
     x_budget_prevu = fields.Float(string='Budget prévisionnel')
     x_budget_realise = fields.Float(string='Budget réalisé')
     x_motif_blocage = fields.Text(string='Motif de blocage')
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        projects = super().create(vals_list)
+        self._assign_default_task_stages(projects)
+        return projects
+
+    def _assign_default_task_stages(self, projects):
+        stages = self.env['project.task.type']
+        for xmlid in DEFAULT_TASK_STAGE_XMLIDS:
+            stage = self.env.ref(xmlid, raise_if_not_found=False)
+            if stage:
+                stages |= stage
+        if stages:
+            for project in projects:
+                project.type_ids = [(4, s.id) for s in stages]
