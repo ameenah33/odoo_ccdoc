@@ -18,7 +18,7 @@ class CcdocAuditLog(models.Model):
     _order = 'create_date desc'
     _rec_name = 'model_name'
 
-    user_id = fields.Many2one('res.users', string='Utilisateur', required=True, ondelete='set null')
+    user_id = fields.Many2one('res.users', string='Utilisateur', required=False, ondelete='set null')
     model_name = fields.Char('Modèle accédé', required=True)
     action = fields.Selection([
         ('search', 'Recherche'),
