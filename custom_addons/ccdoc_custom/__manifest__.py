@@ -1,6 +1,6 @@
 {
     'name': 'CCDOC Customizations',
-    'version': '1.1',
+    'version': '1.2',
     'category': 'Customizations',
     'summary': 'Champs personnalisés CCDOC pour CRM et Projets',
     'description': """
