@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- ============================================================
+             RÈGLES SUR res.users
+             Un utilisateur standard ne voit que lui-même.
+             Un manager de projet voit les membres de son équipe.
+             ============================================================ -->
+
+        <record id="rule_res_users_own_only" model="ir.rule">
+            <field name="name">Utilisateurs: chacun voit uniquement son propre profil</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="domain_force">[('id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_res_users_manager_all" model="ir.rule">
+            <field name="name">Utilisateurs: managers voient tous les utilisateurs</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('project.group_project_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- ============================================================
+             RÈGLES SUR res.partner
+             Utilisateur standard : partenaires non sensibles uniquement.
+             Manager/Admin : tous les partenaires.
+             ============================================================ -->
+
+        <record id="rule_res_partner_non_sensitive" model="ir.rule">
+            <field name="name">Partenaires: utilisateur standard ne voit pas les clients sensibles</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="domain_force">[('is_sensitive', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_res_partner_manager_all" model="ir.rule">
+            <field name="name">Partenaires: managers voient tous les partenaires</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('project.group_project_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- ============================================================
+             RÈGLES SUR project.project
+             Utilisateur standard : uniquement les projets où il est impliqué.
+             Manager : tous les projets.
+             ============================================================ -->
+
+        <record id="rule_project_user_own" model="ir.rule">
+            <field name="name">Projets: utilisateur voit uniquement ses projets</field>
+            <field name="model_id" ref="project.model_project_project"/>
+            <field name="domain_force">['|', '|',
+                ('user_id', '=', user.id),
+                ('x_responsable', 'in', [user.id]),
+                ('x_equipe', 'in', [user.id])
+            ]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_project_manager_all" model="ir.rule">
+            <field name="name">Projets: managers voient tous les projets</field>
+            <field name="model_id" ref="project.model_project_project"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('project.group_project_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- ============================================================
+             RÈGLES SUR project.task
+             Utilisateur standard : uniquement les tâches de ses projets ou qui lui sont assignées.
+             ============================================================ -->
+
+        <record id="rule_project_task_user" model="ir.rule">
+            <field name="name">Tâches: utilisateur voit ses tâches et celles de ses projets</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="domain_force">['|',
+                ('user_ids', 'in', [user.id]),
+                ('project_id.user_id', '=', user.id)
+            ]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_project_task_manager_all" model="ir.rule">
+            <field name="name">Tâches: managers voient toutes les tâches</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('project.group_project_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- ============================================================
+             RÈGLES SUR crm.lead
+             Utilisateur standard : uniquement ses propres opportunités.
+             Managers CRM : toutes les opportunités.
+             ============================================================ -->
+
+        <record id="rule_crm_lead_salesman" model="ir.rule">
+            <field name="name">CRM: commercial voit ses propres opportunités</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="domain_force">['|',
+                ('user_id', '=', user.id),
+                ('x_responsable', 'in', [user.id])
+            ]</field>
+            <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_crm_lead_manager_all" model="ir.rule">
+            <field name="name">CRM: managers voient toutes les opportunités</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- ============================================================
+             RÈGLES SUR sale.order
+             Commercial voit ses propres commandes.
+             ============================================================ -->
+
+        <record id="rule_sale_order_salesman" model="ir.rule">
+            <field name="name">Ventes: commercial voit ses propres commandes</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_sale_order_manager_all" model="ir.rule">
+            <field name="name">Ventes: managers voient toutes les commandes</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- ============================================================
+             RÈGLES SUR purchase.order
+             Les bons de commande ne sont visibles que par le groupe achat.
+             ============================================================ -->
+
+        <record id="rule_purchase_order_user" model="ir.rule">
+            <field name="name">Achats: utilisateur voit ses propres commandes</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('purchase.group_purchase_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_purchase_order_manager_all" model="ir.rule">
+            <field name="name">Achats: managers voient toutes les commandes</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('purchase.group_purchase_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- ============================================================
+             RÈGLES SUR account.move (Factures / Écritures)
+             Réservé aux comptables et administrateurs.
+             ============================================================ -->
+
+        <record id="rule_account_move_accountant" model="ir.rule">
+            <field name="name">Écritures comptables: lecture seule pour les comptables</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

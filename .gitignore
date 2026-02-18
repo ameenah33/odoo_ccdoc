@@ -50,3 +50,4 @@ htmlcov/
 # Misc
 *.bak
 *.tmp
+backups/

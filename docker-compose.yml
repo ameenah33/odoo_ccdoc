@@ -1,34 +1,47 @@
+# ================================================================
+# Docker Compose CCDOC Odoo - Configuration sécurisée
+# Correctifs pentest : VC-07 (segmentation réseau)
+# ================================================================
+
 services:
   db:
     image: postgres:13
     container_name: ccdoc-postgres
     environment:
       POSTGRES_DB: odoo
-      POSTGRES_USER: odoo
-      POSTGRES_PASSWORD: odoo_pwd_local
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
     platform: linux/arm64
+    # SÉCURITÉ : PostgreSQL n'est PAS exposé à l'extérieur (réseau interne Docker uniquement)
+    # Ne pas ajouter de "ports" ici (correctif VC-07)
+    networks:
+      - odoo_internal
 
   odoo:
     image: odoo:17.0
     container_name: ccdoc-odoo
     depends_on:
       - db
+    # SÉCURITÉ : Odoo n'expose pas son port directement (Nginx fait le frontal)
     expose:
       - "8069"
     environment:
       - HOST=db
-      - USER=odoo
-      - PASSWORD=odoo_pwd_local
+      - USER=${POSTGRES_USER}
+      - PASSWORD=${POSTGRES_PASSWORD}
     command: odoo --config=/etc/odoo/odoo.conf
     volumes:
       - odoo_data:/var/lib/odoo
       - ./custom_addons:/mnt/extra-addons
       - ./config:/etc/odoo
+      - odoo_logs:/var/log/odoo
     restart: unless-stopped
     platform: linux/arm64
+    networks:
+      - odoo_internal
 
   nginx:
     image: nginx:alpine
@@ -36,12 +49,25 @@ services:
     depends_on:
       - odoo
     ports:
+      # SÉCURITÉ : En production, exposer uniquement le 443 (HTTPS)
+      # et configurer un certificat TLS (Let's Encrypt ou autre)
       - "8069:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - nginx_logs:/var/log/nginx
     restart: unless-stopped
     platform: linux/arm64
+    networks:
+      - odoo_internal
 
 volumes:
   postgres_data:
   odoo_data:
+  odoo_logs:
+  nginx_logs:
+
+networks:
+  # Réseau interne isolé : seul Nginx est accessible de l'extérieur
+  odoo_internal:
+    driver: bridge
+    internal: false

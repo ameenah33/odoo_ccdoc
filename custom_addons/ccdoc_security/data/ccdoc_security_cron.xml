@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Purge automatique des logs d'audit anciens (> 90 jours) -->
+        <record id="cron_clean_audit_logs" model="ir.cron">
+            <field name="name">CCDOC Sécurité: Purge logs d'audit (> 90 jours)</field>
+            <field name="model_id" ref="ccdoc_security.model_ccdoc_audit_log"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_clean_old_logs()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+        </record>
+
+    </data>
+</odoo>
