@@ -64,11 +64,11 @@ class ResUsersSecurity(models.Model):
             # que lors des changements via _set_password
             pass
 
-    def _set_password(self, password):
+    def _change_password(self, new_password):
         """Override pour valider la complexité avant d'enregistrer."""
-        if password and not self.env.context.get('skip_password_policy'):
-            self._validate_password_complexity(password)
-        super()._set_password(password)
+        if new_password and not self.env.context.get('skip_password_policy'):
+            self._validate_password_complexity(new_password)
+        return super()._change_password(new_password)
 
     def _validate_password_complexity(self, password):
         """Applique les règles de complexité du mot de passe."""
