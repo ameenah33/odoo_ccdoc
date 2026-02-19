@@ -22,7 +22,7 @@ def migrate(cr, version):
             stages |= stage
 
     if not stages:
-        _logger.warning("Migration 17.0.1.2: aucune étape prédéfinie trouvée, abandon.")
+        _logger.warning("Migration 16.0.1.2: aucune étape prédéfinie trouvée, abandon.")
         return
 
     projects = env['project.project'].search([])
@@ -30,6 +30,6 @@ def migrate(cr, version):
         project.type_ids = [(4, s.id) for s in stages]
 
     _logger.info(
-        "Migration 17.0.1.2: %d projets mis à jour avec les étapes prédéfinies.",
+        "Migration 16.0.1.2: %d projets mis à jour avec les étapes prédéfinies.",
         len(projects),
     )

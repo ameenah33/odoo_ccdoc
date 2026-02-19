@@ -61,6 +61,14 @@ fi
 
 echo "  ✅ config/odoo.conf mis à jour"
 
+# --- AJOUT : Mise à jour de /etc/odoo.conf si présent ---
+if [ -f /etc/odoo.conf ]; then
+    echo "  ➡️  Mise à jour de /etc/odoo.conf..."
+    sudo sed -i "s/CHANGE_ME_USE_A_STRONG_32_CHARS_PASSWORD/${ODOO_ADMIN_PASSWORD}/" /etc/odoo.conf
+    sudo sed -i "s/CHANGE_ME_STRONG_DB_PASSWORD/${DB_PASSWORD}/" /etc/odoo.conf
+    echo "  ✅ /etc/odoo.conf mis à jour"
+fi
+
 # ----------------------------------------------------------------
 # 4. Vérification du .gitignore
 # ----------------------------------------------------------------

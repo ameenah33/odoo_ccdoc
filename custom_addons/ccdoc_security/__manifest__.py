@@ -1,6 +1,6 @@
 {
     'name': 'CCDOC Security',
-    'version': '17.0.1.0.0',
+    'version': '16.0.1.1.0',
     'category': 'Security',
     'summary': 'Sécurisation de la plateforme Odoo CCDOC (correctifs pentest)',
     'description': """
