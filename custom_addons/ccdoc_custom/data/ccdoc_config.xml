@@ -1,5 +1,5 @@
 <odoo>
-    <!-- Devise Franc CFA -->
+   
     <record id="currency_xof" model="res.currency">
         <field name="name">Franc CFA</field>
         <field name="symbol">CFA</field>

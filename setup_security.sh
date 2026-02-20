@@ -20,8 +20,8 @@ echo "[1/4] Génération des mots de passe sécurisés..."
 DB_PASSWORD=$(python3 -c "import secrets, string; print(''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(32)))")
 ODOO_ADMIN_PASSWORD=$(python3 -c "import secrets, string; chars = string.ascii_letters + string.digits + '!@#\$%^&*'; print(''.join(secrets.choice(chars) for _ in range(32)))")
 
-echo "  ✅ Mot de passe PostgreSQL généré"
-echo "  ✅ Mot de passe admin Odoo généré"
+echo "   Mot de passe PostgreSQL généré"
+echo "   Mot de passe admin Odoo généré"
 echo ""
 
 # ----------------------------------------------------------------
@@ -41,7 +41,7 @@ POSTGRES_PASSWORD=${DB_PASSWORD}
 ODOO_ADMIN_PASSWORD=${ODOO_ADMIN_PASSWORD}
 EOF
 
-echo "  ✅ Fichier .env mis à jour"
+echo "   Fichier .env mis à jour"
 
 # ----------------------------------------------------------------
 # 3. Mise à jour de config/odoo.conf
@@ -59,14 +59,14 @@ else
     sed -i "s/CHANGE_ME_STRONG_DB_PASSWORD/${DB_PASSWORD}/" config/odoo.conf
 fi
 
-echo "  ✅ config/odoo.conf mis à jour"
+echo "   config/odoo.conf mis à jour"
 
 # --- AJOUT : Mise à jour de /etc/odoo.conf si présent ---
 if [ -f /etc/odoo.conf ]; then
-    echo "  ➡️  Mise à jour de /etc/odoo.conf..."
+    echo "    Mise à jour de /etc/odoo.conf..."
     sudo sed -i "s/CHANGE_ME_USE_A_STRONG_32_CHARS_PASSWORD/${ODOO_ADMIN_PASSWORD}/" /etc/odoo.conf
     sudo sed -i "s/CHANGE_ME_STRONG_DB_PASSWORD/${DB_PASSWORD}/" /etc/odoo.conf
-    echo "  ✅ /etc/odoo.conf mis à jour"
+    echo "   /etc/odoo.conf mis à jour"
 fi
 
 # ----------------------------------------------------------------
@@ -76,9 +76,9 @@ echo "[4/4] Vérification du .gitignore..."
 
 if ! grep -q "^\.env$" .gitignore 2>/dev/null; then
     echo ".env" >> .gitignore
-    echo "  ✅ .env ajouté au .gitignore"
+    echo "  .env ajouté au .gitignore"
 else
-    echo "  ✅ .env déjà dans .gitignore"
+    echo "   .env déjà dans .gitignore"
 fi
 
 if ! grep -q "^backups/" .gitignore 2>/dev/null; then
@@ -91,7 +91,7 @@ fi
 echo ""
 echo "========================================================"
 echo "  RÉCAPITULATIF DES CREDENTIALS GÉNÉRÉS"
-echo "  ⚠️  SAUVEGARDER CES INFORMATIONS EN LIEU SÛR !"
+echo "    SAUVEGARDER CES INFORMATIONS EN LIEU SÛR !"
 echo "========================================================"
 echo ""
 echo "  PostgreSQL Password : ${DB_PASSWORD}"

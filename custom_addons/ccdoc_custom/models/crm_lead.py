@@ -9,12 +9,6 @@ _logger = logging.getLogger(__name__)
 
 class CrmLead(models.Model):
     _inherit = 'crm.lead'
-
-    # =====================================================================
-    # CHAMPS PERSONNALISÉS
-    # =====================================================================
-    
-    # Justification de gain
     x_justification_win = fields.Text(string="Justification gain")
     x_signed_po_attachment_id = fields.Many2one(
         'ir.attachment', 
@@ -22,7 +16,6 @@ class CrmLead(models.Model):
         readonly=True
     )
     
-    # Notification d'envoi
     x_contacts_a_notifier = fields.Many2many(
         'res.partner', 
         'crm_lead_notif_partner_rel',
@@ -36,15 +29,12 @@ class CrmLead(models.Model):
         help="Cochez cette case pour notifier les contacts sélectionnés."
     )
     
-    # Références et classification
     x_ref_offre = fields.Char(string='REF Offre', size=50, tracking=True)
     x_bu_ids = fields.Many2many('ccdoc.bu', string='BU', tracking=True)
     
-    # Suivi
     x_blocage = fields.Text(string='Blocage', tracking=True)
     x_etape_suivante = fields.Text(string='Étape suivante', tracking=True)
     
-    # Dates
     x_date_depot = fields.Date(string='Date Dépôt', tracking=True)
     x_date_validation_dc = fields.Date(string='Date Validation DC', tracking=True)
     x_deadline_validation_dc = fields.Date(string='Échéance Validation DC', tracking=True)
@@ -54,7 +44,6 @@ class CrmLead(models.Model):
     x_date_demande = fields.Date(string='Date de demande', tracking=True)
     x_deadline = fields.Date(string='Deadline', tracking=True)
     
-    # Statut et responsabilité
     x_statut = fields.Char(string='Statut', tracking=True)
     x_responsable = fields.Many2many(
         'res.users',
@@ -70,16 +59,11 @@ class CrmLead(models.Model):
         ('elevee', 'Élevée')
     ], string='Priorité', tracking=True)
     
-    # Prévisions
     x_forecast = fields.Float(string='Forecast (%)', tracking=True)
     x_avancement = fields.Integer(string='Avancement (%)', tracking=True)
     
-    # Projet lié
     project_id = fields.Many2one('project.project', string='Projet lié', tracking=True)
 
-    # =====================================================================
-    # MÉTHODES ONCHANGE
-    # =====================================================================
     
     @api.onchange('x_envoi_notifie')
     def _onchange_envoi_notifie(self):
@@ -111,10 +95,6 @@ class CrmLead(models.Model):
                             'message': "Utilisez le bouton 'Justificatif de gain' avant de passer en 'Gagné'.",
                         }
                     }
-
-    # =====================================================================
-    # MÉTHODE CREATE (CORRIGÉE POUR ODOO 17)
-    # =====================================================================
     
     @api.model_create_multi
     def create(self, vals_list):
@@ -136,28 +116,28 @@ class CrmLead(models.Model):
                     elif isinstance(bu_ids[0], int):
                         bu_list = bu_ids
             
-            # Générer la REF Offre si des BU sont sélectionnées
+            
             if bu_list:
                 bu_objs = self.env['ccdoc.bu'].browse(bu_list)
                 date_str = fields.Date.context_today(self).strftime('%d%m%Y')
                 
-                # Trouver le dernier numéro utilisé (chercher dans TOUTES les refs)
+                
                 last_num = 0
                 all_leads = self.env['crm.lead'].search([('x_ref_offre', '!=', False)])
                 for lead in all_leads:
                     if lead.x_ref_offre:
                         try:
-                            # Extraire le numéro à la fin (après le dernier tiret)
+                            
                             num = int(lead.x_ref_offre.split('-')[-1])
                             if num > last_num:
                                 last_num = num
                         except (ValueError, IndexError):
                             continue
                 
-                # Incrémenter pour la nouvelle opportunité
+                
                 new_num = last_num + 1
                 
-                # Construire les préfixes des BU sélectionnées
+                
                 bu_prefixes = []
                 for bu in bu_objs:
                     bu_prefix = bu.name[:3].upper() if bu.name else 'XXX'
@@ -167,10 +147,6 @@ class CrmLead(models.Model):
                 vals['x_ref_offre'] = '-'.join(bu_prefixes) + f"-{date_str}-{new_num}"
         
         return super().create(vals_list)
-
-    # =====================================================================
-    # MÉTHODE WRITE (UNIFIÉE)
-    # =====================================================================
     
     def write(self, vals):
         """Gère les notifications d'envoi et les changements d'étape."""
@@ -253,15 +229,13 @@ class CrmLead(models.Model):
         elif not lead.x_signed_po_attachment_id:
             raise UserError("⚠️ Bon de commande signé manquant !")
 
-    # =====================================================================
-    # CONTRAINTES
-    # =====================================================================
+  
     
     @api.constrains('stage_id')
     def _check_won_justification(self):
         """Contrainte : empêche le passage en Gagné sans justification."""
         for lead in self:
-            # Ne vérifier que si l'étape actuelle est marquée comme "Gagné" (is_won=True)
+            
             if lead.stage_id and lead.stage_id.is_won:
                 if not lead.x_justification_win or not lead.x_signed_po_attachment_id:
                     raise ValidationError(
@@ -290,9 +264,6 @@ class CrmLead(models.Model):
                         f"⚠️ {field_label} doit être postérieure à la date de création."
                     )
 
-    # =====================================================================
-    # ACTIONS
-    # =====================================================================
     
     def action_set_won(self):
         """Surcharge de l'action Gagné standard."""
@@ -387,9 +358,6 @@ class CrmLead(models.Model):
             
             self._ccdoc_create_sale_order_bu(bu, ref_offre_bu)
 
-    # =====================================================================
-    # MÉTHODES UTILITAIRES
-    # =====================================================================
     
     def _generate_ref_offre(self):
         """Génère la référence offre basée sur les BU sélectionnées."""
@@ -398,7 +366,7 @@ class CrmLead(models.Model):
         
         date_str = fields.Date.context_today(self).strftime('%d%m%Y')
         
-        # Trouver le dernier numéro utilisé
+        
         last_num = 0
         all_leads = self.env['crm.lead'].search([('x_ref_offre', '!=', False), ('id', '!=', self.id if self.id else 0)])
         for lead in all_leads:
@@ -485,16 +453,13 @@ class CrmLead(models.Model):
                     'price_unit': lead.x_forecast or 0.0,
                 })
 
-    # =====================================================================
-    # NOTIFICATIONS D'ÉCHÉANCE
-    # =====================================================================
 
     @api.model
     def _cron_check_validation_deadlines(self):
         """Vérifie les échéances de validation et envoie des notifications."""
         today = fields.Date.context_today(self)
 
-        # Chercher les opportunités avec échéances DC arrivant aujourd'hui ou dépassées
+        
         leads_dc = self.search([
             ('x_deadline_validation_dc', '<=', today),
             ('x_date_validation_dc', '=', False),  # Pas encore validé
@@ -504,7 +469,7 @@ class CrmLead(models.Model):
         for lead in leads_dc:
             lead._send_validation_reminder('DC', lead.x_deadline_validation_dc)
 
-        # Chercher les opportunités avec échéances DT arrivant aujourd'hui ou dépassées
+       
         leads_dt = self.search([
             ('x_deadline_validation_dt', '<=', today),
             ('x_date_validation_dt', '=', False),  # Pas encore validé
@@ -518,12 +483,8 @@ class CrmLead(models.Model):
         """Envoie un rappel de validation aux responsables."""
         self.ensure_one()
         today = fields.Date.context_today(self)
-
-        # Calculer si c'est en retard
         days_overdue = (today - deadline).days if deadline < today else 0
         is_overdue = days_overdue > 0
-
-        # Préparer le message
         if is_overdue:
             status_msg = f"⚠️ EN RETARD de {days_overdue} jour(s)"
             status_color = "#dc3545"
@@ -539,12 +500,12 @@ class CrmLead(models.Model):
         <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px;
                     border-left: 4px solid {color};">
             <p><strong>Statut:</strong> <span style="color: {color}; font-weight: bold;">{status}</span></p>
-            <p><strong>📋 Opportunité:</strong> {name}</p>
-            <p><strong>🏢 Client:</strong> {partner}</p>
-            <p><strong>📅 Échéance:</strong> {deadline}</p>
-            <p><strong>📝 Référence:</strong> {ref}</p>
+            <p><strong> Opportunité:</strong> {name}</p>
+            <p><strong> Client:</strong> {partner}</p>
+            <p><strong>Échéance:</strong> {deadline}</p>
+            <p><strong> Référence:</strong> {ref}</p>
             <p style="margin-top: 15px; padding: 10px; background-color: #fff3cd; border-radius: 5px;">
-                💡 <strong>Action requise:</strong> Veuillez valider cette opportunité au plus vite.
+                 <strong>Action requise:</strong> Veuillez valider cette opportunité au plus vite.
             </p>
         </div>
         ''').format(
@@ -570,7 +531,7 @@ class CrmLead(models.Model):
         if partner_ids:
             self.message_post(
                 body=body,
-                subject=f"⏰ Rappel Validation {validation_type} - {self.name}",
+                subject=f" Rappel Validation {validation_type} - {self.name}",
                 partner_ids=partner_ids,
                 message_type='notification',
                 subtype_xmlid='mail.mt_comment',

@@ -11,7 +11,7 @@ DB_CONTAINER="ccdoc-postgres"
 DB_NAME="odoo"
 DB_USER="odoo"
 
-# Couleurs pour les messages
+
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
@@ -21,20 +21,15 @@ echo "======================================"
 echo "  CCDOC - Sauvegarde Automatique"
 echo "======================================"
 echo ""
-
-# Créer le dossier de sauvegarde s'il n'existe pas
 mkdir -p "$BACKUP_DIR"
-
-# Vérifier que Docker est en cours d'exécution
 if ! docker ps > /dev/null 2>&1; then
-    echo -e "${RED}❌ Erreur: Docker n'est pas démarré${NC}"
+    echo -e "${RED} Erreur: Docker n'est pas démarré${NC}"
     echo "Veuillez démarrer Docker Desktop et réessayer."
     exit 1
 fi
 
-# Vérifier que les conteneurs sont en cours d'exécution
 if ! docker ps | grep -q "$DB_CONTAINER"; then
-    echo -e "${RED}❌ Erreur: Le conteneur $DB_CONTAINER n'est pas démarré${NC}"
+    echo -e "${RED} Erreur: Le conteneur $DB_CONTAINER n'est pas démarré${NC}"
     echo "Démarrez les conteneurs avec: docker-compose up -d"
     exit 1
 fi
@@ -78,14 +73,14 @@ echo -e "${GREEN}======================================"
 echo -e "  ✓ Sauvegarde terminée avec succès!"
 echo -e "======================================${NC}"
 echo ""
-echo "📁 Emplacement: $BACKUP_DIR"
-echo "📅 Date: $(date '+%Y-%m-%d %H:%M:%S')"
+echo "Emplacement: $BACKUP_DIR"
+echo " Date: $(date '+%Y-%m-%d %H:%M:%S')"
 echo ""
 echo "Fichiers créés:"
 ls -lh "$BACKUP_DIR" | grep "$TIMESTAMP"
 echo ""
 
-# Optionnel: Nettoyer les sauvegardes anciennes (garder seulement les 7 dernières)
+
 echo -e "${YELLOW}🧹 Nettoyage des anciennes sauvegardes (conservation des 7 dernières)...${NC}"
 cd "$BACKUP_DIR" || exit
 ls -t odoo_backup_*.sql 2>/dev/null | tail -n +8 | xargs -r rm

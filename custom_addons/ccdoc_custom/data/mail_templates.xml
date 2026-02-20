@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
     
-    <!-- Template email pour notification d'envoi de dossier -->
+    
     <record id="mail_template_dossier_envoye" model="mail.template">
         <field name="name">CCDOC - Dossier envoyé au client</field>
         <field name="model_id" ref="crm.model_crm_lead"/>
-        <field name="subject">📤 Dossier envoyé : {{ object.x_ref_offre or object.name }}</field>
+        <field name="subject">Dossier envoyé : {{ object.x_ref_offre or object.name }}</field>
         <field name="email_from">{{ (user.email_formatted) }}</field>
         <field name="body_html"><![CDATA[
 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -18,8 +18,8 @@
         <div style="background-color: #f8f9fa; border-left: 4px solid #667eea; padding: 15px; margin: 15px 0;">
             <p><strong>📋 Référence :</strong> {{ object.x_ref_offre or 'N/A' }}</p>
             <p><strong>🏢 Client :</strong> {{ object.partner_id.name or 'Non défini' }}</p>
-            <p><strong>💰 Montant :</strong> {{ "%.2f"|format(object.expected_revenue) }} €</p>
-            <p><strong>📅 Date :</strong> {{ context_today().strftime('%d/%m/%Y') }}</p>
+            <p><strong> Montant :</strong> {{ "%.2f"|format(object.expected_revenue) }} €</p>
+            <p><strong> Date :</strong> {{ context_today().strftime('%d/%m/%Y') }}</p>
         </div>
         <div style="text-align: center; margin: 20px 0;">
             <a href="{{ object.get_base_url() }}/web#id={{ object.id }}&amp;model=crm.lead&amp;view_type=form" 
@@ -40,12 +40,12 @@
     <record id="mail_template_justificatif_gain" model="mail.template">
         <field name="name">CCDOC - Opportunité gagnée</field>
         <field name="model_id" ref="crm.model_crm_lead"/>
-        <field name="subject">🏆 Opportunité gagnée : {{ object.x_ref_offre or object.name }}</field>
+        <field name="subject"> Opportunité gagnée : {{ object.x_ref_offre or object.name }}</field>
         <field name="email_from">{{ (user.email_formatted) }}</field>
         <field name="body_html"><![CDATA[
 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
     <div style="background: #11998e; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
-        <h1 style="color: white; margin: 0;">🏆 Opportunité Gagnée !</h1>
+        <h1 style="color: white; margin: 0;"> Opportunité Gagnée !</h1>
     </div>
     <div style="background-color: #ffffff; padding: 20px; border: 1px solid #e0e0e0;">
         <p>Félicitations ! 🎉</p>
@@ -53,8 +53,8 @@
         <div style="background-color: #f0fff4; border-left: 4px solid #38ef7d; padding: 15px; margin: 15px 0;">
             <p><strong>📋 Référence :</strong> {{ object.x_ref_offre or 'N/A' }}</p>
             <p><strong>🏢 Client :</strong> {{ object.partner_id.name or 'Non défini' }}</p>
-            <p><strong>💰 Montant :</strong> {{ "%.2f"|format(object.expected_revenue) }} €</p>
-            <p><strong>👤 Responsable :</strong> {{ object.user_id.name or 'Non assigné' }}</p>
+            <p><strong> Montant :</strong> {{ "%.2f"|format(object.expected_revenue) }} €</p>
+            <p><strong>Responsable :</strong> {{ object.user_id.name or 'Non assigné' }}</p>
         </div>
         <div style="background-color: #fff8e1; padding: 15px; border-radius: 8px; margin: 15px 0;">
             <p style="margin: 0;"><strong>📝 Justification :</strong></p>
@@ -79,7 +79,7 @@
     <record id="mail_template_changement_etape" model="mail.template">
         <field name="name">CCDOC - Changement d'étape</field>
         <field name="model_id" ref="crm.model_crm_lead"/>
-        <field name="subject">🔄 {{ object.x_ref_offre or object.name }} - Étape : {{ object.stage_id.name }}</field>
+        <field name="subject"> {{ object.x_ref_offre or object.name }} - Étape : {{ object.stage_id.name }}</field>
         <field name="email_from">{{ (user.email_formatted) }}</field>
         <field name="body_html"><![CDATA[
 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -95,8 +95,8 @@
         </div>
         <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">
             <p><strong>🏢 Client :</strong> {{ object.partner_id.name or 'Non défini' }}</p>
-            <p><strong>💰 Montant :</strong> {{ "%.2f"|format(object.expected_revenue) }} €</p>
-            <p><strong>📊 Probabilité :</strong> {{ object.probability }}%</p>
+            <p><strong> Montant :</strong> {{ "%.2f"|format(object.expected_revenue) }} €</p>
+            <p><strong> Probabilité :</strong> {{ object.probability }}%</p>
         </div>
         <div style="text-align: center; margin: 20px 0;">
             <a href="{{ object.get_base_url() }}/web#id={{ object.id }}&amp;model=crm.lead&amp;view_type=form" 

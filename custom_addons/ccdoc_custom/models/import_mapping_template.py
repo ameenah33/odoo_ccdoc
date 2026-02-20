@@ -10,7 +10,7 @@ class ImportMappingTemplate(models.Model):
     name = fields.Char(string="Nom du template", required=True)
     partner_id = fields.Many2one('res.partner', string="Client", required=True)
     
-    # Colonnes mappées (index de colonne Excel, 0-based)
+    
     col_reference = fields.Integer(string="Colonne Référence produit", default=-1)
     col_description = fields.Integer(string="Colonne Description", default=-1)
     col_quantity = fields.Integer(string="Colonne Quantité", default=-1)
