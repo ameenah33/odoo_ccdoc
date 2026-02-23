@@ -51,3 +51,4 @@ htmlcov/
 *.bak
 *.tmp
 backups/
+config/odoo.conf

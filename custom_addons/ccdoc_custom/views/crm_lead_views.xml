@@ -60,4 +60,28 @@
 
     <!-- Le bouton "Générer des Pistes" est masqué via CSS dans hide_quick_buttons.css -->
 
+    <!-- Filtres de recherche par commercial -->
+    <record id="view_crm_lead_search_ccdoc" model="ir.ui.view">
+        <field name="name">crm.lead.search.ccdoc</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.view_crm_lead_filter"/>
+        <field name="arch" type="xml">
+            <!-- Ajout du champ Responsable (custom) dans la barre de recherche -->
+            <xpath expr="//search/field[@name='user_id']" position="after">
+                <field name="x_responsable" string="Responsable"/>
+            </xpath>
+            <!-- Filtre rapide "Mes opportunités" (par user_id OU x_responsable) -->
+            <xpath expr="//search/filter[@name='my_activities']" position="before">
+                <filter string="Mes opportunités"
+                        name="my_opportunities_ccdoc"
+                        domain="['|', ('user_id', '=', uid), ('x_responsable', 'in', [uid])]"/>
+                <separator/>
+            </xpath>
+            <!-- Regroupement par commercial -->
+            <xpath expr="//search/group" position="inside">
+                <filter string="Commercial" name="group_by_commercial" context="{'group_by': 'user_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>

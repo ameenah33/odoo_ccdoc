@@ -80,8 +80,22 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.view_project_project_filter"/>
         <field name="arch" type="xml">
+            <!-- Champs de recherche par membre de l'équipe commerciale -->
+            <xpath expr="//search/field[last()]" position="after">
+                <field name="user_id" string="Chef de projet"/>
+                <field name="x_responsable" string="Responsable"/>
+            </xpath>
+            <!-- Filtres rapides -->
+            <xpath expr="//search/filter[last()]" position="after">
+                <separator/>
+                <filter string="Mes projets"
+                        name="my_projects"
+                        domain="['|', ('user_id', '=', uid), ('x_responsable', 'in', [uid])]"/>
+            </xpath>
+            <!-- Regroupements -->
             <xpath expr="//search/group" position="inside">
                 <filter string="Étape" name="group_by_stage_id" context="{'group_by': 'stage_id'}"/>
+                <filter string="Chef de projet" name="group_by_user_id" context="{'group_by': 'user_id'}"/>
             </xpath>
         </field>
     </record>

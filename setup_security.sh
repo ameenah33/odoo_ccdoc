@@ -69,9 +69,7 @@ if [ -f /etc/odoo.conf ]; then
     echo "   /etc/odoo.conf mis à jour"
 fi
 
-# ----------------------------------------------------------------
-# 4. Vérification du .gitignore
-# ----------------------------------------------------------------
+
 echo "[4/4] Vérification du .gitignore..."
 
 if ! grep -q "^\.env$" .gitignore 2>/dev/null; then
@@ -85,9 +83,7 @@ if ! grep -q "^backups/" .gitignore 2>/dev/null; then
     echo "backups/" >> .gitignore
 fi
 
-# ----------------------------------------------------------------
-# Récapitulatif
-# ----------------------------------------------------------------
+
 echo ""
 echo "========================================================"
 echo "  RÉCAPITULATIF DES CREDENTIALS GÉNÉRÉS"
