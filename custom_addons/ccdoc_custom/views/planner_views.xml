@@ -279,11 +279,6 @@
                 <field name="project_id" string="Projet"/>
                 <filter string="Mes plans" name="my_plans"
                         domain="[('user_id', '=', uid)]"/>
-                <separator/>
-                <filter string="En cours" name="in_progress"
-                        domain="[('stage_id.is_closing', '=', False)]"/>
-                <filter string="Terminés" name="closed"
-                        domain="[('stage_id.is_closing', '=', True)]"/>
                 <group expand="0" string="Regrouper par">
                     <filter string="Étape" name="group_stage"
                             context="{'group_by': 'stage_id'}"/>
