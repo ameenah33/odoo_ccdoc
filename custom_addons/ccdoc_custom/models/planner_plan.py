@@ -40,7 +40,7 @@ class PlannerPlan(models.Model):
     project_id = fields.Many2one('project.project', string='Projet lié', tracking=True)
     opportunity_id = fields.Many2one('crm.lead', string='Opportunité liée', tracking=True)
     task_ids = fields.One2many('planner.task', 'plan_id', string='Tâches')
-    task_count = fields.Integer(compute='_compute_task_count', string='Tâches')
+    task_count = fields.Integer(compute='_compute_task_count', string='Nb. tâches')
 
     def _default_stage(self):
         return self.env['planner.plan.stage'].search([], order='sequence', limit=1)
