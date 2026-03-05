@@ -97,8 +97,7 @@ class ProjectProject(models.Model):
             ref_projets.append(f"{bu_prefix}-{date_str}-{new_num}")
         return ', '.join(ref_projets)
 
-    @staticmethod
-    def _extract_bu_ids_from_vals(bu_vals):
+    def _extract_bu_ids_from_vals(self, bu_vals):
         """Extrait les IDs de BU depuis les différents formats ORM."""
         if not bu_vals or not isinstance(bu_vals, list):
             return []
