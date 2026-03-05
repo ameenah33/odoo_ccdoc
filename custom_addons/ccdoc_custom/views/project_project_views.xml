@@ -9,7 +9,7 @@
                 <page string="Informations CCDOC">
                     <group>
                         <group string="Références et Classification">
-                            <field name="x_ref_offre"/>
+                            <field name="x_ref_projet"/>
                             <field name="x_bu_ids" widget="many2many_tags"/>
                         </group>
                         <group string="Responsabilité">
@@ -62,7 +62,7 @@
         <field name="inherit_id" ref="project.view_project"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
-                <field name="x_ref_offre"/>
+                <field name="x_ref_projet"/>
                 <field name="x_priorite"/>
                 <field name="x_responsable" widget="many2many_tags"/>
             </xpath>
@@ -111,13 +111,13 @@
                 <attribute name="type"></attribute>
             </xpath>
             <xpath expr="//kanban/field[@name='partner_id']" position="after">
-                <field name="x_ref_offre"/>
+                <field name="x_ref_projet"/>
                 <field name="x_priorite"/>
                 <field name="x_avancement"/>
             </xpath>
             <xpath expr="//div[hasclass('o_kanban_record_bottom')]" position="before">
-                <div t-if="record.x_ref_offre.value" class="text-muted small mb-1">
-                    <i class="fa fa-tag"/> <field name="x_ref_offre"/>
+                <div t-if="record.x_ref_projet.value" class="text-muted small mb-1">
+                    <i class="fa fa-tag"/> <field name="x_ref_projet"/>
                 </div>
             </xpath>
         </field>
