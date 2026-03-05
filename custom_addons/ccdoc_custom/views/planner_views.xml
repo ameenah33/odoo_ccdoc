@@ -39,7 +39,7 @@
                 <field name="deadline"/>
                 <field name="user_ids"/>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="kanban-box">
                         <div class="oe_kanban_card oe_kanban_global_click">
                             <div class="oe_kanban_content">
                                 <div class="o_kanban_record_top">
@@ -156,7 +156,7 @@
                 <field name="partner_id"/>
                 <field name="date_end"/>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="kanban-box">
                         <div class="oe_kanban_card oe_kanban_global_click">
                             <div class="oe_kanban_content">
                                 <div class="o_kanban_record_top">
