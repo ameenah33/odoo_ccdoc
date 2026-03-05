@@ -1,6 +1,16 @@
 from odoo import models, fields, api
 
 
+class PlannerPlanStage(models.Model):
+    _name = 'planner.plan.stage'
+    _description = 'Étape de plan Planner'
+    _order = 'sequence, id'
+
+    name = fields.Char(string='Nom', required=True)
+    sequence = fields.Integer(default=10)
+    fold = fields.Boolean(string='Plié dans le Kanban', default=False)
+
+
 class PlannerPlan(models.Model):
     _name = 'planner.plan'
     _description = 'Plan CCDOC'
@@ -11,7 +21,7 @@ class PlannerPlan(models.Model):
     description = fields.Html(string='Description')
     partner_id = fields.Many2one('res.partner', string='Client', tracking=True)
     stage_id = fields.Many2one(
-        'ccdoc.project.stage',
+        'planner.plan.stage',
         string='Étape',
         default=lambda self: self._default_stage(),
         group_expand='_read_group_stage_ids',
@@ -33,7 +43,7 @@ class PlannerPlan(models.Model):
     task_count = fields.Integer(compute='_compute_task_count', string='Tâches')
 
     def _default_stage(self):
-        return self.env['ccdoc.project.stage'].search([], order='sequence', limit=1)
+        return self.env['planner.plan.stage'].search([], order='sequence', limit=1)
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):

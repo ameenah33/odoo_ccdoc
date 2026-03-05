@@ -21,6 +21,7 @@
     'views/sale_order_views.xml',
     'views/planner_views.xml',
     'data/project_task_stages.xml',
+    'data/planner_plan_stages.xml',
     'data/planner_task_stages.xml',
     'data/ccdoc_config.xml',
     'data/ccdoc_config_force.xml',

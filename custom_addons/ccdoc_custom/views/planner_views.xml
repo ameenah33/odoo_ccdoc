@@ -2,6 +2,27 @@
 <odoo>
 
     <!-- ============================================================
+         PLANNER.PLAN.STAGE — Vues des étapes de plans
+    ============================================================ -->
+    <record id="view_planner_plan_stage_list" model="ir.ui.view">
+        <field name="name">planner.plan.stage.list</field>
+        <field name="model">planner.plan.stage</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="fold"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_planner_plan_stage" model="ir.actions.act_window">
+        <field name="name">Étapes des plans Planner</field>
+        <field name="res_model">planner.plan.stage</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- ============================================================
          PLANNER.TASK.STAGE — Vues des étapes de tâches
     ============================================================ -->
     <record id="view_planner_task_stage_list" model="ir.ui.view">
@@ -331,10 +352,16 @@
               parent="menu_planner_root"
               sequence="99"/>
 
+    <menuitem id="menu_planner_plan_stages"
+              name="Étapes des plans"
+              parent="menu_planner_config"
+              action="action_planner_plan_stage"
+              sequence="1"/>
+
     <menuitem id="menu_planner_task_stages"
               name="Étapes des tâches"
               parent="menu_planner_config"
               action="action_planner_task_stage"
-              sequence="1"/>
+              sequence="2"/>
 
 </odoo>
