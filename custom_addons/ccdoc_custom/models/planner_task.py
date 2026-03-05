@@ -15,7 +15,7 @@ class PlannerTask(models.Model):
     _name = 'planner.task'
     _description = 'Tâche de plan CCDOC'
     _order = 'sequence, id'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(string='Nom de la tâche', required=True, tracking=True)
     plan_id = fields.Many2one(
