@@ -3,3 +3,5 @@ from . import project_project
 from . import ccdoc_bu
 from . import sale_order
 from . import import_mapping_template
+from . import planner_plan
+from . import planner_task
