@@ -307,11 +307,11 @@
          MENUS
     ============================================================ -->
 
-    <!-- Sous-menu Planner sous CCDOC -->
+    <!-- Application Planner standalone -->
     <menuitem id="menu_planner_root"
               name="Planner"
-              parent="menu_ccdoc_root"
-              sequence="5"/>
+              web_icon="ccdoc_custom,static/description/icon.png"
+              sequence="15"/>
 
     <menuitem id="menu_planner_plans"
               name="Mes Plans"
