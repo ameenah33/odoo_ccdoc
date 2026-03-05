@@ -12,11 +12,8 @@ class CcdocTicketStage(models.Model):
     fold = fields.Boolean(string='Replié dans Kanban', default=False)
     is_default = fields.Boolean(string='Étape par défaut', default=False)
     is_closed = fields.Boolean(string='Étape de clôture', default=False)
-    
-    # Couleur de l'étape
     color = fields.Integer(string='Couleur')
-    
-    # Template d'email à envoyer lors du passage à cette étape
+
     mail_template_id = fields.Many2one('mail.template', string='Modèle d\'email')
     
     ticket_count = fields.Integer(string='Nombre de tickets', compute='_compute_ticket_count')

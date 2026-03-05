@@ -15,7 +15,7 @@ DB_USER="odoo"
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
 echo "======================================"
 echo "  CCDOC - Sauvegarde Automatique"
@@ -37,7 +37,7 @@ fi
 echo -e "${YELLOW}📦 Début de la sauvegarde...${NC}"
 echo ""
 
-# 1. Sauvegarde de la base de données PostgreSQL
+#  Sauvegarde de la base de données PostgreSQL
 echo -e "${YELLOW}[1/3] Sauvegarde de la base de données PostgreSQL...${NC}"
 DB_BACKUP="$BACKUP_DIR/odoo_backup_${TIMESTAMP}.sql"
 if docker exec "$DB_CONTAINER" pg_dump -U "$DB_USER" "$DB_NAME" > "$DB_BACKUP"; then
@@ -48,7 +48,7 @@ else
     exit 1
 fi
 
-# 2. Sauvegarde des modules personnalisés
+# Sauvegarde des modules personnalisés
 echo -e "${YELLOW}[2/3] Sauvegarde des modules personnalisés...${NC}"
 ADDONS_BACKUP="$BACKUP_DIR/custom_addons_backup_${TIMESTAMP}.tar.gz"
 if tar -czf "$ADDONS_BACKUP" custom_addons/ 2>/dev/null; then
@@ -58,7 +58,7 @@ else
     echo -e "${RED}✗ Échec de la sauvegarde des modules${NC}"
 fi
 
-# 3. Sauvegarde du filestore Odoo (fichiers uploadés)
+# Sauvegarde du filestore Odoo (fichiers uploadés)
 echo -e "${YELLOW}[3/3] Sauvegarde des fichiers Odoo (pièces jointes, images...)${NC}"
 FILESTORE_BACKUP="$BACKUP_DIR/odoo_filestore_backup_${TIMESTAMP}.tar.gz"
 if docker run --rm -v odoo_ccdoc_odoo_data:/data -v "$(pwd)/$BACKUP_DIR":/backup alpine tar -czf /backup/odoo_filestore_backup_${TIMESTAMP}.tar.gz -C /data . 2>/dev/null; then

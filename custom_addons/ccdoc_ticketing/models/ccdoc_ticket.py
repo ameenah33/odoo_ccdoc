@@ -8,8 +8,6 @@ class CcdocTicket(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'mail.alias.mixin']
     _order = 'priority desc, create_date desc'
     _rec_name = 'display_name'
-
-    # Configuration de l'alias email
     def _alias_get_creation_values(self):
         """Valeurs pour la création automatique de tickets depuis un email."""
         values = super()._alias_get_creation_values()
@@ -17,13 +15,11 @@ class CcdocTicket(models.Model):
         values['alias_force_thread_id'] = 0
         return values
 
-    # Champs principaux
     name = fields.Char(string='Référence', readonly=True, copy=False, default='Nouveau')
     display_name = fields.Char(string='Nom', compute='_compute_display_name', store=True)
     subject = fields.Char(string='Sujet', required=True, tracking=True)
     description = fields.Html(string='Description')
-    
-    # Relations
+
     partner_id = fields.Many2one('res.partner', string='Client', tracking=True)
     project_id = fields.Many2one('project.project', string='Projet lié', tracking=True)
     user_id = fields.Many2one('res.users', string='Assigné à', tracking=True, 
@@ -65,21 +61,14 @@ class CcdocTicket(models.Model):
         ('blocked', 'Rouge'),
     ], string='État Kanban', default='normal', tracking=True)
     
-    # Couleur pour Kanban
     color = fields.Integer(string='Couleur')
-    
-    # Tags
     tag_ids = fields.Many2many('ccdoc.ticket.tag', string='Tags')
-    
-    # Canal d'origine
     origin = fields.Selection([
         ('email', 'E-mail'),
         ('phone', 'Téléphone'),
         ('web', 'Site Web'),
         ('internal', 'Interne'),
     ], string='Origine', default='internal')
-    
-    # Résolution
     resolution = fields.Html(string='Résolution')
     
     @api.depends('name', 'subject')
@@ -132,24 +121,17 @@ class CcdocTicket(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            # Générer le numéro de ticket
             if vals.get('name', 'Nouveau') == 'Nouveau':
                 vals['name'] = self.env['ir.sequence'].next_by_code('ccdoc.ticket') or 'Nouveau'
-
-            # Auto-assigner le partner_id pour les demandeurs
-            # Si l'utilisateur est un demandeur et n'a pas spécifié de client,
-            # on utilise le contact lié à son compte utilisateur
             if not vals.get('partner_id'):
                 user = self.env.user
                 # Vérifier si l'utilisateur a le rôle Demandeur
                 if user.has_group('ccdoc_ticketing.group_ccdoc_ticketing_requester'):
-                    # Trouver le partner lié à l'utilisateur
+                    # Trouver le partneraire lié au user
                     if user.partner_id:
                         vals['partner_id'] = user.partner_id.id
 
         tickets = super().create(vals_list)
-
-        # Envoyer notification de création pour chaque ticket
         for ticket in tickets:
             ticket._send_notification_creation()
 
@@ -164,14 +146,10 @@ class CcdocTicket(models.Model):
             })
     
     def write(self, vals):
-        # Garder trace de l'ancienne étape pour notification
         old_stages = {ticket.id: ticket.stage_id for ticket in self}
 
-        # Enregistrer la date d'assignation
         if 'user_id' in vals and vals['user_id']:
             vals['date_assigned'] = datetime.now()
-
-        # Enregistrer la date de clôture
         if 'stage_id' in vals:
             stage = self.env['ccdoc.ticket.stage'].browse(vals['stage_id'])
             if stage.is_closed:
@@ -180,8 +158,6 @@ class CcdocTicket(models.Model):
                 vals['date_closed'] = False
 
         result = super().write(vals)
-
-        # Envoyer notifications si changement d'étape
         if 'stage_id' in vals:
             for ticket in self:
                 old_stage = old_stages.get(ticket.id)

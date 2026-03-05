@@ -13,7 +13,7 @@
                 <button name="action_justify_win" type="object" string="Justificatif de gain" class="oe_highlight"/>
             </xpath>
             <xpath expr="//page[@name='extra']" position="after">
-                <page string="Informations CCDOC" name="ccdoc_info">
+                <page string="Informations CCDOC" name="ccdoc_info" invisible="type == 'lead'">
                     <group>
                         <group string="Références et Classification">
                             <field name="x_bu_ids" widget="many2many_checkboxes"/>

@@ -1,9 +1,3 @@
-#!/usr/bin/env bash
-# ================================================================
-# CCDOC Odoo - Script de sécurisation initiale
-# Compatible macOS et Linux
-# ================================================================
-
 set -e
 
 echo ""
@@ -12,9 +6,9 @@ echo "  CCDOC Odoo - Initialisation de la sécurité"
 echo "========================================================"
 echo ""
 
-# ----------------------------------------------------------------
+
 # 1. Génération de mots de passe forts
-# ----------------------------------------------------------------
+
 echo "[1/4] Génération des mots de passe sécurisés..."
 
 DB_PASSWORD=$(python3 -c "import secrets, string; print(''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(32)))")
@@ -24,16 +18,9 @@ echo "   Mot de passe PostgreSQL généré"
 echo "   Mot de passe admin Odoo généré"
 echo ""
 
-# ----------------------------------------------------------------
-# 2. Mise à jour du fichier .env
-# ----------------------------------------------------------------
 echo "[2/4] Mise à jour du fichier .env..."
 
 cat > .env << EOF
-# ================================================================
-# Variables d'environnement CCDOC Odoo - GÉNÉRÉ AUTOMATIQUEMENT
-# NE PAS COMMITER CE FICHIER DANS GIT
-# ================================================================
 
 POSTGRES_DB=postgres
 POSTGRES_USER=odoo
@@ -43,10 +30,6 @@ EOF
 
 echo "   Fichier .env mis à jour"
 
-# ----------------------------------------------------------------
-# 3. Mise à jour de config/odoo.conf
-# Compatible macOS (sed -i '') et Linux (sed -i)
-# ----------------------------------------------------------------
 echo "[3/4] Mise à jour de config/odoo.conf..."
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -61,7 +44,7 @@ fi
 
 echo "   config/odoo.conf mis à jour"
 
-# --- AJOUT : Mise à jour de /etc/odoo.conf si présent ---
+#Mise à jour de /etc/odoo.conf si présent 
 if [ -f /etc/odoo.conf ]; then
     echo "    Mise à jour de /etc/odoo.conf..."
     sudo sed -i "s/CHANGE_ME_USE_A_STRONG_32_CHARS_PASSWORD/${ODOO_ADMIN_PASSWORD}/" /etc/odoo.conf
